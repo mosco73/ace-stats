@@ -4,7 +4,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      {/* Navbar */}
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
@@ -17,7 +16,6 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="px-6 py-16 text-center">
         <h1 className="text-4xl font-bold tracking-tight mb-4">
           Estadísticas de tenis <span className="text-yellow-400">que no encontrás en otro lado</span>
@@ -27,12 +25,42 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Jugadores */}
-      <section className="px-6 max-w-4xl mx-auto mb-10">
+      <section className="px-6 max-w-5xl mx-auto mb-10">
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Jugadores destacados
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          {/* Sinner */}
+          <Link href="/jugadores/sinner">
+            <div className="bg-zinc-900 border border-zinc-800 hover:border-yellow-400 rounded-2xl p-6 cursor-pointer transition-all">
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-green-400">
+                  JS
+                </div>
+                <div>
+                  <div className="font-semibold">Jannik Sinner</div>
+                  <div className="text-zinc-400 text-sm">Italia · #1 ATP</div>
+                </div>
+                <div className="ml-auto text-yellow-400 font-bold text-lg">#1</div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-zinc-800 rounded-xl p-3 text-center">
+                  <div className="text-lg font-bold">68.3%</div>
+                  <div className="text-xs text-zinc-500 mt-1">Tie-breaks</div>
+                </div>
+                <div className="bg-zinc-800 rounded-xl p-3 text-center">
+                  <div className="text-lg font-bold">74.2%</div>
+                  <div className="text-xs text-zinc-500 mt-1">Set decisivo</div>
+                </div>
+                <div className="bg-zinc-800 rounded-xl p-3 text-center">
+                  <div className="text-lg font-bold">39.1%</div>
+                  <div className="text-xs text-zinc-500 mt-1">Remontadas</div>
+                </div>
+              </div>
+              <div className="mt-4 text-xs text-zinc-500 text-right">Ver perfil completo →</div>
+            </div>
+          </Link>
 
           {/* Djokovic */}
           <Link href="/jugadores/djokovic">

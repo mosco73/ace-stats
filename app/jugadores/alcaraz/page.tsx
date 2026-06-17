@@ -2,7 +2,6 @@ export default function AlcarazPage() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      {/* Navbar */}
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
@@ -13,7 +12,6 @@ export default function AlcarazPage() {
         </div>
       </nav>
 
-      {/* Header */}
       <section className="px-6 py-10 max-w-4xl mx-auto">
         <div className="flex items-center gap-5 mb-8">
           <div className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-2xl font-bold text-blue-400">
@@ -30,7 +28,6 @@ export default function AlcarazPage() {
           </div>
         </div>
 
-        {/* Stats */}
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Estadísticas avanzadas
         </h2>
@@ -67,7 +64,6 @@ export default function AlcarazPage() {
           </div>
         </div>
 
-        {/* Superficie */}
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Rendimiento por superficie
         </h2>
@@ -125,7 +121,6 @@ export default function AlcarazPage() {
             <div className="text-xs text-zinc-500 mt-1">89V · 35D</div>
           </div>
         </div>
-
       </section>
     </main>
   );
