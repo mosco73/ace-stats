@@ -53,7 +53,7 @@ export default function CompararPage() {
             <div className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-yellow-400 mx-auto mb-2">
               {inicial(j1.nombre)}
             </div>
-            <div className="text-zinc-500 text-xs">{j1.pais} · #{j1.ranking}</div>
+            <div className="text-zinc-500 text-xs">{j1.pais} · {j1.ranking > 0 ? `#${j1.ranking}` : "Retirado"}</div>
           </div>
 
           <div className="text-center text-zinc-500 font-semibold">VS</div>
@@ -71,7 +71,7 @@ export default function CompararPage() {
             <div className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-green-400 mx-auto mb-2">
               {inicial(j2.nombre)}
             </div>
-            <div className="text-zinc-500 text-xs">{j2.pais} · #{j2.ranking}</div>
+            <div className="text-zinc-500 text-xs">{j2.pais} · {j2.ranking > 0 ? `#${j2.ranking}` : "Retirado"}</div>
           </div>
         </div>
 
