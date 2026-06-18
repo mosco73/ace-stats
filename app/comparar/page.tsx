@@ -1,8 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import { jugadores } from "../data/jugadores";
 
 export default function CompararPage() {
-  const j1 = jugadores[0]; // Djokovic
-  const j2 = jugadores[2]; // Sinner
+  const [id1, setId1] = useState("djokovic");
+  const [id2, setId2] = useState("sinner");
+
+  const j1 = jugadores.find((j) => j.id === id1)!;
+  const j2 = jugadores.find((j) => j.id === id2)!;
 
   const filas = [
     { label: "Tie-breaks ganados", key: "tiebreaks" },
@@ -12,6 +18,9 @@ export default function CompararPage() {
     { label: "Conversión finales", key: "finales" },
     { label: "Indoor", key: "indoor" },
   ] as const;
+
+  const inicial = (nombre: string) =>
+    nombre.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -29,24 +38,44 @@ export default function CompararPage() {
       <section className="px-6 py-10 max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold mb-8 text-center">Comparador de jugadores</h1>
 
-        <div className="grid grid-cols-3 items-center mb-6">
+        {/* Selectores */}
+        <div className="grid grid-cols-3 items-center mb-6 gap-4">
           <div className="text-center">
+            <select
+              value={id1}
+              onChange={(e) => setId1(e.target.value)}
+              className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm w-full mb-3 text-center cursor-pointer"
+            >
+              {jugadores.map((j) => (
+                <option key={j.id} value={j.id}>{j.nombre}</option>
+              ))}
+            </select>
             <div className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-yellow-400 mx-auto mb-2">
-              ND
+              {inicial(j1.nombre)}
             </div>
-            <div className="font-semibold text-sm">{j1.nombre}</div>
             <div className="text-zinc-500 text-xs">{j1.pais} · #{j1.ranking}</div>
           </div>
+
           <div className="text-center text-zinc-500 font-semibold">VS</div>
+
           <div className="text-center">
+            <select
+              value={id2}
+              onChange={(e) => setId2(e.target.value)}
+              className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm w-full mb-3 text-center cursor-pointer"
+            >
+              {jugadores.map((j) => (
+                <option key={j.id} value={j.id}>{j.nombre}</option>
+              ))}
+            </select>
             <div className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-green-400 mx-auto mb-2">
-              JS
+              {inicial(j2.nombre)}
             </div>
-            <div className="font-semibold text-sm">{j2.nombre}</div>
             <div className="text-zinc-500 text-xs">{j2.pais} · #{j2.ranking}</div>
           </div>
         </div>
 
+        {/* Comparación */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
           {filas.map((fila) => {
             const v1 = j1.stats[fila.key];
