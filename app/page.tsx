@@ -10,7 +10,7 @@ export default function Home() {
           <span className="font-semibold tracking-tight">Ace Stats</span>
         </div>
         <div className="flex gap-6 text-sm text-zinc-400">
-          <a href="/" className="hover:text-white">Jugadores</a>
+          <a href="/jugadores" className="hover:text-white">Jugadores</a>
           <span className="text-zinc-600">Rankings</span>
           <a href="/comparar" className="hover:text-white">Comparar</a>
         </div>
