@@ -63,6 +63,23 @@ export default function NadalPage() {
             <div className="text-xs text-zinc-500 mt-1">Histórico</div>
           </div>
         </div>
+        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+          vs Top 10 por superficie
+        </h2>
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Dura</div>
+            <div className="text-xl font-bold text-blue-400">58.7%</div>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
+            <div className="text-xl font-bold text-orange-400">71.4%</div>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Césped</div>
+            <div className="text-xl font-bold text-green-400">56.2%</div>
+          </div>
+        </div>
 
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Rendimiento por superficie

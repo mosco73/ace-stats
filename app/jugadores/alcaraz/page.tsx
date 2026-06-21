@@ -63,6 +63,23 @@ export default function AlcarazPage() {
             <div className="text-xs text-zinc-500 mt-1">8 victorias · 4 derrotas</div>
           </div>
         </div>
+        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+          vs Top 10 por superficie
+        </h2>
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Dura</div>
+            <div className="text-xl font-bold text-blue-400">52.1%</div>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
+            <div className="text-xl font-bold text-orange-400">61.4%</div>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+            <div className="text-xs text-zinc-500 mb-1">Césped</div>
+            <div className="text-xl font-bold text-green-400">54.8%</div>
+          </div>
+        </div>
 
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Rendimiento por superficie

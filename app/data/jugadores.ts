@@ -20,6 +20,11 @@ export const jugadores = [
       arcilla: { pct: 81.1, victorias: 341, derrotas: 79 },
       cesped: { pct: 87.3, victorias: 194, derrotas: 28 },
       indoor: { pct: 89.1, victorias: 412, derrotas: 50 },
+      vsTop10PorSuperficie: {
+      dura: 68.4,
+      arcilla: 63.2,
+      cesped: 71.8,
+    },
     },
   },
   {
@@ -43,6 +48,11 @@ export const jugadores = [
       arcilla: { pct: 82.4, victorias: 154, derrotas: 33 },
       cesped: { pct: 79.1, victorias: 72, derrotas: 19 },
       indoor: { pct: 71.8, victorias: 89, derrotas: 35 },
+      vsTop10PorSuperficie: {
+          dura: 52.1,
+          arcilla: 61.4,
+          cesped: 54.8,
+        },
     },
   },
   {
@@ -66,13 +76,18 @@ export const jugadores = [
       arcilla: { pct: 74.6, victorias: 132, derrotas: 45 },
       cesped: { pct: 68.2, victorias: 58, derrotas: 27 },
       indoor: { pct: 83.7, victorias: 198, derrotas: 38 },
+      vsTop10PorSuperficie: {
+          dura: 64.2,
+          arcilla: 55.1,
+          cesped: 58.3,
+        },
     },
   },
   {
     id: "nadal",
     nombre: "Rafael Nadal",
     pais: "España",
-    ranking: 0,
+    ranking: -1,
     grandSlams: 22,
     semanas1: 209,
     stats: {
@@ -89,13 +104,18 @@ export const jugadores = [
       arcilla: { pct: 92.1, victorias: 474, derrotas: 41 },
       cesped: { pct: 75.4, victorias: 98, derrotas: 32 },
       indoor: { pct: 72.3, victorias: 241, derrotas: 92 },
+      vsTop10PorSuperficie: {
+          dura: 58.7,
+          arcilla: 71.4,
+          cesped: 56.2,
+        },
     },
   },
   {
     id: "federer",
     nombre: "Roger Federer",
     pais: "Suiza",
-    ranking: 0,
+    ranking: -1,
     grandSlams: 20,
     semanas1: 310,
     stats: {
@@ -112,6 +132,11 @@ export const jugadores = [
       arcilla: { pct: 73.8, victorias: 289, derrotas: 102 },
       cesped: { pct: 87.6, victorias: 198, derrotas: 28 },
       indoor: { pct: 85.3, victorias: 421, derrotas: 73 },
+      vsTop10PorSuperficie: {
+          dura: 64.8,
+          arcilla: 52.3,
+          cesped: 69.1,
+        },
     },
   },
 ]
