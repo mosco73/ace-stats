@@ -32,7 +32,7 @@ export default async function JugadorPage({
           </div>
           <div>
             <h1 className="text-3xl font-bold">{jugador.nombre}</h1>
-            <p className="text-zinc-400 mt-1">{jugador.pais} · Pro</p>
+            <p className="text-zinc-400 mt-1">{jugador.pais} · {jugador.mano === "L" ? "Zurdo" : "Diestro"} · Pro desde {jugador.proDesde}</p>
             <div className="flex gap-3 mt-2">
               <span className="text-xs bg-zinc-800 text-zinc-300 px-3 py-1 rounded-full">{jugador.grandSlams} Grand Slams</span>
               <span className="text-xs bg-zinc-800 text-zinc-300 px-3 py-1 rounded-full">{jugador.semanas1} semanas #1</span>
