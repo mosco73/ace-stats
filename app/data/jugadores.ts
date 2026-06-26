@@ -16,6 +16,8 @@ export const jugadores = [
       finales: 71.2,
       indoor: 79.8,
       quintosSetGS: 77.3,
+      bpSalvados: 65.5,
+      bpConvertidos: 44.2,
     },
     superficie: {
       dura: { pct: 86.4, victorias: 559, derrotas: 88 },
@@ -46,6 +48,8 @@ export const jugadores = [
       finales: 77.8,
       indoor: 63.2,
       quintosSetGS: 90.0,
+      bpSalvados: 63.5,
+      bpConvertidos: 40.9,
     },
     superficie: {
       dura: { pct: 77.6, victorias: 76, derrotas: 22 },
@@ -72,10 +76,12 @@ export const jugadores = [
       tiebreaks: 56.5,
       setDecisivo: 69.0,
       remontadas: 34.2,
-      vsTop10: 49.1,
+      vsTop10: 49.1, 
       finales: 77.8,
       indoor: 73.6,
       quintosSetGS: 46.2,
+      bpSalvados: 66.2,
+      bpConvertidos: 43.3,
     },
     superficie: {
       dura: { pct: 77.7, victorias: 108, derrotas: 31 },
@@ -106,6 +112,8 @@ export const jugadores = [
       finales: 70.0,
       indoor: 66.3,
       quintosSetGS: 67.6,
+      bpSalvados: 66.1,
+      bpConvertidos: 44.9,
     },
     superficie: {
       dura: { pct: 79.2, victorias: 448, derrotas: 118 },
@@ -136,6 +144,8 @@ export const jugadores = [
       finales: 66.0,
       indoor: 83.1,
       quintosSetGS: 63.0,
+      bpSalvados: 67.7,
+      bpConvertidos: 41.2,
     },
     superficie: {
       dura: { pct: 83.7, victorias: 584, derrotas: 114 },
