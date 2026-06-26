@@ -88,6 +88,16 @@ export default async function JugadorPage({
                         <div className="text-2xl font-bold">{jugador.stats.bpConvertidos}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                     </div>
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                        <div className="text-xs text-zinc-500 mb-1">Juegos de saque ganados</div>
+                        <div className="text-2xl font-bold">{jugador.stats.svGanados}%</div>
+                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    </div>
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                        <div className="text-xs text-zinc-500 mb-1">Juegos de devolución ganados</div>
+                        <div className="text-2xl font-bold">{jugador.stats.devGanados.toFixed(1)}%</div>
+                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    </div>
                 </div>
 
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">

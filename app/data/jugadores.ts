@@ -18,6 +18,8 @@ export const jugadores = [
       quintosSetGS: 77.3,
       bpSalvados: 65.5,
       bpConvertidos: 44.2,
+      svGanados: 86.1,
+      devGanados: 32.0,
     },
     superficie: {
       dura: { pct: 86.4, victorias: 559, derrotas: 88 },
@@ -50,6 +52,8 @@ export const jugadores = [
       quintosSetGS: 90.0,
       bpSalvados: 63.5,
       bpConvertidos: 40.9,
+      svGanados: 83.1,
+      devGanados: 31.0,
     },
     superficie: {
       dura: { pct: 77.6, victorias: 76, derrotas: 22 },
@@ -82,6 +86,8 @@ export const jugadores = [
       quintosSetGS: 46.2,
       bpSalvados: 66.2,
       bpConvertidos: 43.3,
+      svGanados: 84.1,
+      devGanados: 27.7,
     },
     superficie: {
       dura: { pct: 77.7, victorias: 108, derrotas: 31 },
@@ -114,6 +120,8 @@ export const jugadores = [
       quintosSetGS: 67.6,
       bpSalvados: 66.1,
       bpConvertidos: 44.9,
+      svGanados: 85.7,
+      devGanados: 33.4,
     },
     superficie: {
       dura: { pct: 79.2, victorias: 448, derrotas: 118 },
@@ -146,6 +154,8 @@ export const jugadores = [
       quintosSetGS: 63.0,
       bpSalvados: 67.7,
       bpConvertidos: 41.2,
+      svGanados: 89.0,
+      devGanados: 26.8,
     },
     superficie: {
       dura: { pct: 83.7, victorias: 584, derrotas: 114 },
