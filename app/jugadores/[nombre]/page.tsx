@@ -79,72 +79,77 @@ export default async function JugadorPage({
                         <div className="text-xs text-zinc-500 mt-1">Histórico</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                        <div className="text-xs text-zinc-500 mb-1">Break points salvados</div>
-                        <div className="text-2xl font-bold">{jugador.stats.bpSalvados}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                        <div className="text-xs text-zinc-500 mb-1">Masters 1000</div>
+                        <div className="text-2xl font-bold">{jugador.stats.masters1000.pct}%</div>
+                        <div className="text-xs text-zinc-500 mt-1">{jugador.stats.masters1000.victorias}V · {jugador.stats.masters1000.derrotas}D</div>
                     </div>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                        <div className="text-xs text-zinc-500 mb-1">Break points convertidos</div>
-                        <div className="text-2xl font-bold">{jugador.stats.bpConvertidos}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
-                    </div>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                        <div className="text-xs text-zinc-500 mb-1">Juegos de saque ganados</div>
-                        <div className="text-2xl font-bold">{jugador.stats.svGanados}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
-                    </div>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                        <div className="text-xs text-zinc-500 mb-1">Juegos de devolución ganados</div>
-                        <div className="text-2xl font-bold">{jugador.stats.devGanados.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
-                    </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                    <div className="text-xs text-zinc-500 mb-1">Break points salvados</div>
+                    <div className="text-2xl font-bold">{jugador.stats.bpSalvados}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                 </div>
-
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
-                    vs Top 10 por superficie
-                </h2>
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
-                        <div className="text-xs text-zinc-500 mb-1">Dura</div>
-                        <div className="text-xl font-bold text-blue-400">{jugador.superficie.vsTop10PorSuperficie.dura}%</div>
-                    </div>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
-                        <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
-                        <div className="text-xl font-bold text-orange-400">{jugador.superficie.vsTop10PorSuperficie.arcilla}%</div>
-                    </div>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
-                        <div className="text-xs text-zinc-500 mb-1">Césped</div>
-                        <div className="text-xl font-bold text-green-400">{jugador.superficie.vsTop10PorSuperficie.cesped}%</div>
-                    </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                    <div className="text-xs text-zinc-500 mb-1">Break points convertidos</div>
+                    <div className="text-2xl font-bold">{jugador.stats.bpConvertidos}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                 </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                    <div className="text-xs text-zinc-500 mb-1">Juegos de saque ganados</div>
+                    <div className="text-2xl font-bold">{jugador.stats.svGanados}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                    <div className="text-xs text-zinc-500 mb-1">Juegos de devolución ganados</div>
+                    <div className="text-2xl font-bold">{jugador.stats.devGanados.toFixed(1)}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                </div>
+            </div>
 
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
-                    Rendimiento por superficie
-                </h2>
-                <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
-                    {(["dura", "arcilla", "cesped", "indoor"] as const).map((sup) => {
-                        const colores = { dura: "blue", arcilla: "orange", cesped: "green", indoor: "purple" };
-                        const nombres = { dura: "Dura", arcilla: "Arcilla", cesped: "Césped", indoor: "Indoor" };
-                        const d = jugador.superficie[sup];
-                        const color = colores[sup];
-                        return (
-                            <div key={sup}>
-                                <div className="flex justify-between text-sm mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <div className={`w-2 h-2 rounded-full bg-${color}-400`}></div>
-                                        <span>{nombres[sup]}</span>
-                                    </div>
-                                    <span className="font-semibold">{d.pct}%</span>
+            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+                vs Top 10 por superficie
+            </h2>
+            <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+                    <div className="text-xs text-zinc-500 mb-1">Dura</div>
+                    <div className="text-xl font-bold text-blue-400">{jugador.superficie.vsTop10PorSuperficie.dura}%</div>
+                </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+                    <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
+                    <div className="text-xl font-bold text-orange-400">{jugador.superficie.vsTop10PorSuperficie.arcilla}%</div>
+                </div>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
+                    <div className="text-xs text-zinc-500 mb-1">Césped</div>
+                    <div className="text-xl font-bold text-green-400">{jugador.superficie.vsTop10PorSuperficie.cesped}%</div>
+                </div>
+            </div>
+
+            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+                Rendimiento por superficie
+            </h2>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
+                {(["dura", "arcilla", "cesped", "indoor"] as const).map((sup) => {
+                    const colores = { dura: "blue", arcilla: "orange", cesped: "green", indoor: "purple" };
+                    const nombres = { dura: "Dura", arcilla: "Arcilla", cesped: "Césped", indoor: "Indoor" };
+                    const d = jugador.superficie[sup];
+                    const color = colores[sup];
+                    return (
+                        <div key={sup}>
+                            <div className="flex justify-between text-sm mb-2">
+                                <div className="flex items-center gap-2">
+                                    <div className={`w-2 h-2 rounded-full bg-${color}-400`}></div>
+                                    <span>{nombres[sup]}</span>
                                 </div>
-                                <div className="w-full bg-zinc-800 rounded-full h-2">
-                                    <div className={`bg-${color}-400 h-2 rounded-full`} style={{ width: `${d.pct}%` }}></div>
-                                </div>
-                                <div className="text-xs text-zinc-500 mt-1">{d.victorias}V · {d.derrotas}D</div>
+                                <span className="font-semibold">{d.pct}%</span>
                             </div>
-                        );
-                    })}
-                </div>
-            </section>
-        </main>
+                            <div className="w-full bg-zinc-800 rounded-full h-2">
+                                <div className={`bg-${color}-400 h-2 rounded-full`} style={{ width: `${d.pct}%` }}></div>
+                            </div>
+                            <div className="text-xs text-zinc-500 mt-1">{d.victorias}V · {d.derrotas}D</div>
+                        </div>
+                    );
+                })}
+            </div>
+        </section>
+        </main >
     );
 }
