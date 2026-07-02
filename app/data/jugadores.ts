@@ -149,8 +149,8 @@ export const jugadores = [
     grandSlams: 20,
     semanas1: 310,
     stats: {
-      tiebreaks: 65.1,
-      setDecisivo: 64.5,
+      tiebreaks: 65.2,
+      setDecisivo: 64.8,
       remontadas: 37.2,
       vsTop10: 64.3,
       finales: 66.0,
@@ -160,13 +160,13 @@ export const jugadores = [
       bpConvertidos: 41.2,
       svGanados: 88.8,
       devGanados: 26.7,
-      masters1000: { pct: 77.9, victorias: 381, derrotas: 108 },
+      masters1000: { pct: 77.8, victorias: 386, derrotas: 110 },
     },
     superficie: {
-      dura: { pct: 83.7, victorias: 584, derrotas: 114 },
+      dura: { pct: 83.7, victorias: 786, derrotas: 155 },
       arcilla: { pct: 75.7, victorias: 227, derrotas: 73 },
       cesped: { pct: 87.1, victorias: 189, derrotas: 28 },
-      indoor: { pct: 83.1, victorias: 202, derrotas: 41 },
+      indoor: { pct: 80.3, victorias: 245, derrotas: 60 },
       vsTop10PorSuperficie: {
         dura: 64.4,
         arcilla: 50.8,
