@@ -203,9 +203,9 @@ export const jugadores = [
       cesped: { pct: 67.1, victorias: 55, derrotas: 27 },
       indoor: { pct: 66.9, victorias: 83, derrotas: 41 },
       vsTop10PorSuperficie: {
-        dura: 0,
-        arcilla: 0,
-        cesped: 0,
+        dura: 48.3,
+        arcilla: 45.5,
+        cesped: 57.1,
       },
     },
   },
