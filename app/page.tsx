@@ -29,7 +29,7 @@ export default function Home() {
         </div>
         <div className="flex gap-6 text-sm text-zinc-400">
           <a href="/jugadores" className="hover:text-white">Jugadores</a>
-          <span className="text-zinc-600">Rankings</span>
+        <a href="/records" className="hover:text-white">Records</a>
           <a href="/comparar" className="hover:text-white">Comparar</a>
         </div>
       </nav>
