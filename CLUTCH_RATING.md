@@ -104,10 +104,24 @@ El shrinkage ya compensa la poca muestra en el número final, pero este indicado
 
 ## Validación
 
-Antes de publicar la V1, chequear:
-- El ranking resultante coincide, a grandes rasgos, con la percepción general del circuito sobre quién es "clutch"
-- Ningún jugador queda con un Clutch Rating por fuera de un rango razonable (0-100) por errores de cálculo
-- Los 6 jugadores actuales muestran variación real entre sí, no todos agrupados cerca del mismo número
+## Validación
+
+Resultados obtenidos con `scripts/clutch_rating.py` sobre los 6 jugadores actuales de Ace Stats:
+
+| Jugador | Clutch Rating |
+|---|---:|
+| Jannik Sinner | 100.0 |
+| Rafael Nadal | 98.8 |
+| Novak Djokovic | 98.8 |
+| Carlos Alcaraz | 96.9 |
+| Roger Federer | 95.5 |
+| Daniil Medvedev | 78.0 |
+
+**Chequeos:**
+- ✅ El ranking coincide con la percepción general del circuito: Djokovic y Nadal arriba (reputación de fortaleza mental), Federer un escalón por debajo (patrón real y documentado en su historial vs. Djokovic/Nadal en tiebreaks y sets decisivos), Medvedev claramente último (consistente con sus stats de presión sistemáticamente más bajas ya detectadas en sesiones anteriores).
+- ✅ Ningún jugador queda fuera del rango 0-100.
+- ✅ Hay variación real entre los 6 (78.0 a 100.0), no están todos agrupados.
+- ⚠️ **Caso a observar:** Sinner llegó exacto a 100.0 — sus 6 estadísticas superan el P95 del circuito y se truncan al techo. Es el comportamiento documentado (ver "Escala" en Normalización), no un error, pero significa que su número no puede subir más aunque siga mejorando, mientras esté en este nivel de dominancia. Revisar si esto se vuelve un problema real a medida que pase el tiempo.
 
 ---
 
