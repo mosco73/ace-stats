@@ -52,6 +52,18 @@ Rendimiento en 6 situaciones de presión específicas dentro de un partido de te
 *Estos umbrales fueron elegidos para construir la primera versión del Clutch Rating y podrán revisarse cuando Ace Stats incorpore más jugadores y se analice la distribución completa del circuito.*
 
 **Escala:** para cada estadística se calculan los percentiles P5 y P95 sobre la población de referencia filtrada. P5 se mapea a 0, P95 se mapea a 100, de forma lineal. Valores por debajo de P5 o por encima de P95 se truncan a 0 o 100. Se usan percentiles en vez de mínimo/máximo para que un caso extremo con poca muestra (ej. un jugador que ganó sus únicos 4 tiebreaks jugados) no defina el techo o el piso de la escala.
+**Percentiles calculados (circuito ATP 2000-2026, tras aplicar Umbrales V1):**
+
+| Estadística | P5 | P50 | P95 | Jugadores en la muestra |
+|---|---|---|---|---|
+| Tiebreaks | 39.6 | 50.0 | 59.8 | 392 |
+| Set decisivo | 35.0 | 50.0 | 62.0 | 387 |
+| Finales | 27.3 | 45.5 | 69.7 | 110 |
+| Remontadas | 8.4 | 16.4 | 27.5 | 396 |
+| BP Salvados | 56.0 | 60.4 | 65.9 | 396 |
+| BP Convertidos | 34.5 | 39.2 | 42.7 | 396 |
+
+Calculados con `scripts/distribucion_historica.py`, que agrega la carrera completa de cada jugador ATP desde 2000 y aplica los Umbrales V1 antes de calcular percentiles. Validado cruzando los 6 jugadores actuales de Ace Stats contra `calcular_stats.py`: coinciden de forma exacta o casi exacta (Nadal, con carrera 100% posterior a 2000, coincide en las 6 estadísticas sin ninguna diferencia).
 
 ---
 
@@ -105,6 +117,7 @@ Antes de publicar la V1, chequear:
 - No mide el nivel general del jugador, solo su rendimiento bajo presión en las 6 situaciones definidas
 - Los Umbrales V1 y los pesos son decisiones de diseño documentadas, no verdades matemáticas — pueden revisarse
 - La población de referencia (desde el año 2000) excluye eras anteriores por decisión metodológica
+- En 4 de las 6 estadísticas (Tiebreaks, Set decisivo, Remontadas, BP Convertidos), los jugadores de élite ya cargados en Ace Stats caen en o por encima del P95 de todo el circuito — esperable, dado que ser un campeón histórico correlaciona con rendir bien bajo presión. Consecuencia: esas 4 estadísticas diferencian poco *entre* los jugadores actuales de Ace Stats (todos cerca de 100), mientras que Finales y BP Salvados sí distinguen mejor entre ellos. Esto se corrige solo a medida que se agreguen jugadores de nivel medio al roster — no requiere cambiar la metodología.
 
 ---
 
@@ -115,6 +128,7 @@ Antes de publicar la V1, chequear:
 - **Shrinkage con k = umbral mínimo de cada estadística:** reutiliza una decisión ya tomada en vez de sumar un parámetro nuevo sin fundamento.
 - **Mediana (P50) en vez de promedio como referencia del shrinkage:** más robusta ante distribuciones sesgadas.
 - **Finales subió de 20% a 25% de peso** pese a tener la muestra más chica de las 6 estadísticas — compensado explícitamente por el shrinkage, no ignorado.
+- **Finales excluye walkovers sin marcador registrado:** un partido de presión requiere sets reales jugados; una final decidida por abandono antes de empezar no es una situación de presión medible. Esto genera una diferencia de 1-2 partidos vs. conteos anteriores para algunos jugadores — diferencia menor y deliberada.
 
 ## Cambios futuros
 

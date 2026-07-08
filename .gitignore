@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 datos-frescos/
+scripts/distribucion_historica.csv
