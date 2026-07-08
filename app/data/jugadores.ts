@@ -32,6 +32,17 @@ export const jugadores = [
         arcilla: 57.1,
         cesped: 64.0,
       },
+      clutchRating: {
+      total: 98.8,
+      detalle: {
+        tiebreaks: { normalizado: 100, confianza: "alta" },
+        setDecisivo: { normalizado: 100, confianza: "alta" },
+        finales: { normalizado: 96.7, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 96.0, confianza: "alta" },
+        bpConvertidos: { normalizado: 100, confianza: "alta" },
+      },
+    },
     },
   },
   {
@@ -67,6 +78,17 @@ export const jugadores = [
         arcilla: 72.7,
         cesped: 75.0,
       },
+      clutchRating: {
+      total: 96.9,
+      detalle: {
+        tiebreaks: { normalizado: 100, confianza: "alta" },
+        setDecisivo: { normalizado: 100, confianza: "alta" },
+        finales: { normalizado: 99.4, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 82.8, confianza: "alta" },
+        bpConvertidos: { normalizado: 87.8, confianza: "alta" },
+      },
+    },
     },
   },
   {
@@ -102,6 +124,17 @@ export const jugadores = [
         arcilla: 50.0,
         cesped: 62.5,
       },
+      clutchRating: {
+      total: 100.0,
+      detalle: {
+        tiebreaks: { normalizado: 100, confianza: "alta" },
+        setDecisivo: { normalizado: 100, confianza: "alta" },
+        finales: { normalizado: 100, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 100, confianza: "alta" },
+        bpConvertidos: { normalizado: 100, confianza: "alta" },
+      },
+    },
     },
   },
   {
@@ -137,6 +170,17 @@ export const jugadores = [
         arcilla: 80.3,
         cesped: 69.2,
       },
+      clutchRating: {
+      total: 98.8,
+      detalle: {
+        tiebreaks: { normalizado: 99.6, confianza: "alta" },
+        setDecisivo: { normalizado: 100, confianza: "alta" },
+        finales: { normalizado: 95.5, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 100, confianza: "alta" },
+        bpConvertidos: { normalizado: 100, confianza: "alta" },
+      },
+    },
     },
   },
   {
@@ -172,6 +216,17 @@ export const jugadores = [
         arcilla: 50.8,
         cesped: 67.7,
       },
+      clutchRating: {
+      total: 95.5,
+      detalle: {
+        tiebreaks: { normalizado: 100, confianza: "alta" },
+        setDecisivo: { normalizado: 100, confianza: "alta" },
+        finales: { normalizado: 89.5, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 100, confianza: "alta" },
+        bpConvertidos: { normalizado: 81.7, confianza: "alta" },
+      },
+    },
     },
   },
   {
@@ -207,6 +262,17 @@ export const jugadores = [
         arcilla: 45.5,
         cesped: 57.1,
       },
+      clutchRating: {
+      total: 78.0,
+      detalle: {
+        tiebreaks: { normalizado: 80.6, confianza: "alta" },
+        setDecisivo: { normalizado: 82.3, confianza: "alta" },
+        finales: { normalizado: 58.2, confianza: "alta" },
+        remontadas: { normalizado: 100, confianza: "alta" },
+        bpSalvados: { normalizado: 70.7, confianza: "alta" },
+        bpConvertidos: { normalizado: 96.3, confianza: "alta" },
+      },
+    },
     },
   },
 ]
