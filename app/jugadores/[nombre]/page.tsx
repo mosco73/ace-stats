@@ -1,4 +1,4 @@
-import { jugadores } from "../../data/jugadores";
+import { jugadores, CLUTCH_RATING_PROMEDIO_ATP } from "../../data/jugadores";
 import { notFound } from "next/navigation";
 
 export default async function JugadorPage({
@@ -45,6 +45,73 @@ export default async function JugadorPage({
                     </div>
                 </div>
 
+                <div className="bg-zinc-900 border-2 border-yellow-400/40 rounded-2xl p-6 mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-yellow-400">⭐</span>
+          <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">
+            Clutch Rating
+          </h2>
+        </div>
+        <div className="flex items-baseline gap-3 mb-1">
+          <span className="text-5xl font-bold">{jugador.clutchRating.total}</span>
+          <span className="text-sm text-zinc-500">
+            {jugador.clutchRating.confianzaGlobal === "alta"
+              ? "🟢 Alta confianza"
+              : jugador.clutchRating.confianzaGlobal === "moderada"
+              ? "🟡 Muestra moderada"
+              : "🔴 Muestra insuficiente"}
+          </span>
+        </div>
+        <p className="text-zinc-400 text-sm mb-4">Capacidad para rendir bajo presión</p>
+        <div className="flex gap-6 text-sm text-zinc-400 mb-4">
+          <span>Percentil {jugador.clutchRating.percentil}</span>
+          <span>Promedio ATP: {CLUTCH_RATING_PROMEDIO_ATP}</span>
+        </div>
+        <div className="border-t border-zinc-800 pt-4 space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Tie-breaks</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.tiebreaks.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.tiebreaks.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.tiebreaks.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Set decisivo</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.setDecisivo.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.setDecisivo.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.setDecisivo.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Finales</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.finales.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.finales.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.finales.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Remontadas</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.remontadas.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.remontadas.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.remontadas.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">BP salvados</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.bpSalvados.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.bpSalvados.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.bpSalvados.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">BP convertidos</span>
+            <span className="flex items-center gap-2">
+              <span className="font-semibold">{jugador.clutchRating.detalle.bpConvertidos.normalizado}</span>
+              <span>{jugador.clutchRating.detalle.bpConvertidos.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.bpConvertidos.confianza === "moderada" ? "🟡" : "🔴"}</span>
+            </span>
+          </div>
+        </div>
+      </div>
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                     Estadísticas avanzadas
                 </h2>

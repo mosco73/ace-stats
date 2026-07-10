@@ -78,18 +78,55 @@ def calcular_clutch(fila):
     return round(total, 1), detalle
 
 
+CONFIANZA_VALOR = {"alta": 1.0, "moderada": 0.5, "insuficiente": 0.0}
+MATCHES_MINIMO_RATING = 100  # minimo de partidos desde 2000 para entrar al ranking ATP-wide
+
+
+def confianza_global(detalle):
+    total_valor = 0.0
+    total_peso = 0.0
+    for stat, d in detalle.items():
+        peso = PESOS[stat]
+        valor = CONFIANZA_VALOR[d["confianza"]]
+        total_valor += peso * valor
+        total_peso += peso
+    promedio = total_valor / total_peso if total_peso else 0.0
+    if promedio >= 0.75:
+        return "alta", round(promedio, 2)
+    elif promedio >= 0.4:
+        return "moderada", round(promedio, 2)
+    else:
+        return "insuficiente", round(promedio, 2)
+
+
 if __name__ == "__main__":
     tabla = pd.read_csv(os.path.join(DIR, "distribucion_historica.csv"))
 
-    conocidos = ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Carlos Alcaraz", "Jannik Sinner", "Daniil Medvedev"]
+    elegibles = tabla[tabla["partidos"] >= MATCHES_MINIMO_RATING].copy()
+    print(f"Jugadores elegibles (>= {MATCHES_MINIMO_RATING} partidos desde 2000): {len(elegibles)} de {len(tabla)} totales")
 
+    ratings = []
+    for _, fila in elegibles.iterrows():
+        rating, _ = calcular_clutch(fila)
+        ratings.append(rating)
+    elegibles["clutch_rating"] = ratings
+
+    promedio_atp = round(elegibles["clutch_rating"].mean(), 1)
+    print(f"Promedio ATP de Clutch Rating: {promedio_atp}\n")
+
+    conocidos = ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Carlos Alcaraz", "Jannik Sinner", "Daniil Medvedev"]
     for nombre in conocidos:
-        fila = tabla[tabla["nombre"] == nombre]
-        if len(fila) == 0:
+        fila_orig = tabla[tabla["nombre"] == nombre]
+        if len(fila_orig) == 0:
             print(f"{nombre}: no encontrado")
             continue
-        fila = fila.iloc[0]
+        fila = fila_orig.iloc[0]
+
         rating, detalle = calcular_clutch(fila)
-        print(f"\n{fila['nombre']}: Clutch Rating = {rating}")
+        percentil = (elegibles["clutch_rating"] < rating).mean() * 100
+        conf_global, conf_valor = confianza_global(detalle)
+
+        print(f"{nombre}: Clutch Rating = {rating} | Percentil {percentil:.1f} | Confianza global: {conf_global} ({conf_valor})")
         for stat, d in detalle.items():
-            print(f"  {stat}: crudo={d['crudo']} n={d['n']} -> ajustado={d['ajustado']} -> normalizado={d['normalizado']} ({d['confianza']})")
+            print(f"  {stat}: normalizado={d['normalizado']} ({d['confianza']})")
+        print()

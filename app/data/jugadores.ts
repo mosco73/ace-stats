@@ -1,3 +1,4 @@
+export const CLUTCH_RATING_PROMEDIO_ATP = 47.6;
 export const jugadores = [
   {
     id: "djokovic",
@@ -32,8 +33,11 @@ export const jugadores = [
         arcilla: 57.1,
         cesped: 64.0,
       },
+    },  
       clutchRating: {
       total: 98.8,
+      percentil: 99.2,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 100, confianza: "alta" },
         setDecisivo: { normalizado: 100, confianza: "alta" },
@@ -42,7 +46,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 96.0, confianza: "alta" },
         bpConvertidos: { normalizado: 100, confianza: "alta" },
       },
-    },
     },
   },
   {
@@ -78,8 +81,11 @@ export const jugadores = [
         arcilla: 72.7,
         cesped: 75.0,
       },
+    },  
       clutchRating: {
       total: 96.9,
+      percentil: 99.0,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 100, confianza: "alta" },
         setDecisivo: { normalizado: 100, confianza: "alta" },
@@ -88,7 +94,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 82.8, confianza: "alta" },
         bpConvertidos: { normalizado: 87.8, confianza: "alta" },
       },
-    },
     },
   },
   {
@@ -124,8 +129,11 @@ export const jugadores = [
         arcilla: 50.0,
         cesped: 62.5,
       },
-      clutchRating: {
+    },  
+   clutchRating: {
       total: 100.0,
+      percentil: 99.7,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 100, confianza: "alta" },
         setDecisivo: { normalizado: 100, confianza: "alta" },
@@ -134,7 +142,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 100, confianza: "alta" },
         bpConvertidos: { normalizado: 100, confianza: "alta" },
       },
-    },
     },
   },
   {
@@ -170,8 +177,11 @@ export const jugadores = [
         arcilla: 80.3,
         cesped: 69.2,
       },
-      clutchRating: {
+    },  
+     clutchRating: {
       total: 98.8,
+      percentil: 99.2,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 99.6, confianza: "alta" },
         setDecisivo: { normalizado: 100, confianza: "alta" },
@@ -180,7 +190,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 100, confianza: "alta" },
         bpConvertidos: { normalizado: 100, confianza: "alta" },
       },
-    },
     },
   },
   {
@@ -216,8 +225,11 @@ export const jugadores = [
         arcilla: 50.8,
         cesped: 67.7,
       },
-      clutchRating: {
+     }, 
+     clutchRating: {
       total: 95.5,
+      percentil: 98.7,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 100, confianza: "alta" },
         setDecisivo: { normalizado: 100, confianza: "alta" },
@@ -226,7 +238,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 100, confianza: "alta" },
         bpConvertidos: { normalizado: 81.7, confianza: "alta" },
       },
-    },
     },
   },
   {
@@ -262,8 +273,11 @@ export const jugadores = [
         arcilla: 45.5,
         cesped: 57.1,
       },
+    },
       clutchRating: {
       total: 78.0,
+      percentil: 96.0,
+      confianzaGlobal: "alta",
       detalle: {
         tiebreaks: { normalizado: 80.6, confianza: "alta" },
         setDecisivo: { normalizado: 82.3, confianza: "alta" },
@@ -272,7 +286,6 @@ export const jugadores = [
         bpSalvados: { normalizado: 70.7, confianza: "alta" },
         bpConvertidos: { normalizado: 96.3, confianza: "alta" },
       },
-    },
     },
   },
 ]
