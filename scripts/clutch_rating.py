@@ -3,13 +3,19 @@ import os
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 
-PERCENTILES = {
-    "tiebreaks":     {"p5": 39.6, "p50": 50.0, "p95": 59.8, "k": 30},
-    "setDecisivo":   {"p5": 35.0, "p50": 50.0, "p95": 62.0, "k": 30},
-    "finales":       {"p5": 27.3, "p50": 45.5, "p95": 69.7, "k": 10},
-    "remontadas":    {"p5": 8.4,  "p50": 16.4, "p95": 27.5, "k": 25},
-    "bpSalvados":    {"p5": 56.0, "p50": 60.4, "p95": 65.9, "k": 0},
-    "bpConvertidos": {"p5": 34.5, "p50": 39.2, "p95": 42.7, "k": 0},
+# CAMBIO V1.1: la normalizacion ya no usa interpolacion lineal P5-P95 (saturaba
+# en 100 para jugadores elite). Ahora cada subscore es el percentil real del
+# jugador dentro de la poblacion de referencia, calculado sobre valores
+# post-shrinkage para comparar manzanas con manzanas.
+# p50 y k se mantienen identicos: el shrinkage no cambia.
+
+SHRINKAGE = {
+    "tiebreaks":     {"p50": 50.0, "k": 30},
+    "setDecisivo":   {"p50": 50.0, "k": 30},
+    "finales":       {"p50": 45.5, "k": 10},
+    "remontadas":    {"p50": 16.4, "k": 25},
+    "bpSalvados":    {"p50": 60.4, "k": 0},
+    "bpConvertidos": {"p50": 39.2, "k": 0},
 }
 
 UMBRALES_MIN = {
@@ -26,6 +32,9 @@ PESOS = {
     "remontadas": 0.10,
 }
 
+CONFIANZA_VALOR = {"alta": 1.0, "moderada": 0.5, "insuficiente": 0.0}
+MATCHES_MINIMO_RATING = 100  # minimo de partidos desde 2000 para entrar al ranking ATP-wide
+
 
 def shrink(pct, n, k, mediana):
     if k == 0 or n is None or pd.isna(pct) or pd.isna(n):
@@ -34,11 +43,38 @@ def shrink(pct, n, k, mediana):
     return 100 * (aciertos + k * (mediana / 100)) / (n + k)
 
 
-def normalizar(pct_ajustado, p5, p95):
-    if pct_ajustado is None or pd.isna(pct_ajustado):
+def col_n(fila_o_tabla, stat):
+    nombre_col = f"{stat}_n"
+    columnas = fila_o_tabla.index if isinstance(fila_o_tabla, pd.Series) else fila_o_tabla.columns
+    return nombre_col if nombre_col in columnas else "partidos"
+
+
+def construir_referencias(elegibles):
+    """Para cada stat, aplica shrinkage a toda la poblacion elegible y devuelve
+    la distribucion de valores ajustados (solo jugadores que superan el umbral
+    minimo de muestra para esa stat, igual que hacia distribucion_historica.py).
+    """
+    referencias = {}
+    for stat, cfg in SHRINKAGE.items():
+        ncol = col_n(elegibles, stat)
+        sub = elegibles[[f"{stat}_pct", ncol]].dropna()
+        sub = sub[sub[ncol] >= UMBRALES_MIN[stat]]
+        ajustados = sub.apply(
+            lambda r: shrink(r[f"{stat}_pct"], r[ncol], cfg["k"], cfg["p50"]), axis=1
+        )
+        referencias[stat] = ajustados.sort_values().to_numpy()
+    return referencias
+
+
+def normalizar_percentil(val, referencia):
+    """Percentil del valor dentro de la distribucion de referencia.
+    Usa midrank para empates: (menores + 0.5 * iguales) / total * 100.
+    """
+    if val is None or pd.isna(val) or len(referencia) == 0:
         return None
-    val = (pct_ajustado - p5) / (p95 - p5) * 100
-    return max(0, min(100, val))
+    menores = (referencia < val).sum()
+    iguales = (referencia == val).sum()
+    return 100 * (menores + 0.5 * iguales) / len(referencia)
 
 
 def confianza(n, umbral):
@@ -52,16 +88,15 @@ def confianza(n, umbral):
         return "insuficiente"
 
 
-def calcular_clutch(fila):
+def calcular_clutch(fila, referencias):
     total = 0.0
     detalle = {}
-    for stat, cfg in PERCENTILES.items():
+    for stat, cfg in SHRINKAGE.items():
         pct = fila.get(f"{stat}_pct")
-        n_col = f"{stat}_n" if f"{stat}_n" in fila.index else "partidos"
-        n = fila.get(n_col)
+        n = fila.get(col_n(fila, stat))
 
         ajustado = shrink(pct, n, cfg["k"], cfg["p50"])
-        normalizado = normalizar(ajustado, cfg["p5"], cfg["p95"])
+        normalizado = normalizar_percentil(ajustado, referencias[stat])
 
         peso = PESOS[stat]
         if normalizado is not None:
@@ -76,10 +111,6 @@ def calcular_clutch(fila):
         }
 
     return round(total, 1), detalle
-
-
-CONFIANZA_VALOR = {"alta": 1.0, "moderada": 0.5, "insuficiente": 0.0}
-MATCHES_MINIMO_RATING = 100  # minimo de partidos desde 2000 para entrar al ranking ATP-wide
 
 
 def confianza_global(detalle):
@@ -105,9 +136,14 @@ if __name__ == "__main__":
     elegibles = tabla[tabla["partidos"] >= MATCHES_MINIMO_RATING].copy()
     print(f"Jugadores elegibles (>= {MATCHES_MINIMO_RATING} partidos desde 2000): {len(elegibles)} de {len(tabla)} totales")
 
+    referencias = construir_referencias(elegibles)
+    for stat, ref in referencias.items():
+        print(f"  Referencia {stat}: {len(ref)} jugadores")
+    print()
+
     ratings = []
     for _, fila in elegibles.iterrows():
-        rating, _ = calcular_clutch(fila)
+        rating, _ = calcular_clutch(fila, referencias)
         ratings.append(rating)
     elegibles["clutch_rating"] = ratings
 
@@ -122,11 +158,11 @@ if __name__ == "__main__":
             continue
         fila = fila_orig.iloc[0]
 
-        rating, detalle = calcular_clutch(fila)
+        rating, detalle = calcular_clutch(fila, referencias)
         percentil = (elegibles["clutch_rating"] < rating).mean() * 100
         conf_global, conf_valor = confianza_global(detalle)
 
         print(f"{nombre}: Clutch Rating = {rating} | Percentil {percentil:.1f} | Confianza global: {conf_global} ({conf_valor})")
         for stat, d in detalle.items():
-            print(f"  {stat}: normalizado={d['normalizado']} ({d['confianza']})")
+            print(f"  {stat}: crudo={d['crudo']} ajustado={d['ajustado']} normalizado={d['normalizado']} ({d['confianza']})")
         print()
