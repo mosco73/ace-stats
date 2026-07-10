@@ -51,8 +51,11 @@ Rendimiento en 6 situaciones de presión específicas dentro de un partido de te
 
 *Estos umbrales fueron elegidos para construir la primera versión del Clutch Rating y podrán revisarse cuando Ace Stats incorpore más jugadores y se analice la distribución completa del circuito.*
 
-**Escala:** para cada estadística se calculan los percentiles P5 y P95 sobre la población de referencia filtrada. P5 se mapea a 0, P95 se mapea a 100, de forma lineal. Valores por debajo de P5 o por encima de P95 se truncan a 0 o 100. Se usan percentiles en vez de mínimo/máximo para que un caso extremo con poca muestra (ej. un jugador que ganó sus únicos 4 tiebreaks jugados) no defina el techo o el piso de la escala.
-**Percentiles calculados (circuito ATP 2000-2026, tras aplicar Umbrales V1):**
+**Escala (V1.1 — percentil real):** el subscore de cada estadística es el **percentil del jugador dentro de la población de referencia**, calculado sobre valores ya ajustados por shrinkage (tanto el del jugador como los de toda la población, para comparar en igualdad de condiciones). Un subscore de 97.3 significa literalmente "mejor que el 97.3% del circuito en esa estadística". Los empates se resuelven con midrank (los jugadores empatados comparten el punto medio de sus posiciones).
+
+Se abandonó la interpolación lineal P5→0 / P95→100 de la V1.0 porque saturaba: todo valor por encima del P95 se truncaba a 100, y los jugadores de élite superan el P95 en casi todas las estadísticas. El caso límite fue Sinner con 100.0 y las 6 componentes en 100 — la métrica no podía distinguir entre los jugadores que Ace Stats existe para comparar. Con percentil real, la resolución en la cola alta se conserva: superar el P95 por 0.3 puntos y superarlo por 8 puntos producen subscores distintos.
+
+**Distribución de referencia (circuito ATP 2000-2026, tras aplicar Umbrales V1):**
 
 | Estadística | P5 | P50 | P95 | Jugadores en la muestra |
 |---|---|---|---|---|
@@ -63,6 +66,8 @@ Rendimiento en 6 situaciones de presión específicas dentro de un partido de te
 | BP Salvados | 56.0 | 60.4 | 65.9 | 396 |
 | BP Convertidos | 34.5 | 39.2 | 42.7 | 396 |
 
+Los P50 de esta tabla siguen siendo el ancla del shrinkage. Los P5/P95 ya no definen la escala (eran la base de la V1.0) pero se conservan como referencia descriptiva de la distribución.
+
 Calculados con `scripts/distribucion_historica.py`, que agrega la carrera completa de cada jugador ATP desde 2000 y aplica los Umbrales V1 antes de calcular percentiles. Validado cruzando los 6 jugadores actuales de Ace Stats contra `calcular_stats.py`: coinciden de forma exacta o casi exacta (Nadal, con carrera 100% posterior a 2000, coincide en las 6 estadísticas sin ninguna diferencia).
 
 ---
@@ -72,6 +77,8 @@ Calculados con `scripts/distribucion_historica.py`, que agrega la carrera comple
 Cuando un jugador tiene poca muestra en una estadística, su porcentaje crudo se atrae parcialmente hacia la mediana histórica, en vez de usarse tal cual o excluirse.
 - **k** = el mismo umbral mínimo definido para esa estadística (ej: Finales k=10, Tiebreaks k=30, Set decisivo k=30, Remontadas k=25). Reutiliza una decisión ya tomada en vez de inventar un número nuevo.
 - **mediana_referencia** = P50 de la población de referencia de esa estadística (no el promedio — más resistente a distribuciones con cola larga).
+
+En la V1.1 el shrinkage se aplica también a **toda la población de referencia** antes de calcular percentiles, no solo al jugador evaluado. Si se rankeara el valor encogido del jugador contra los valores crudos del circuito, el shrinkage funcionaría como una penalización injusta en vez de como un ajuste simétrico.
 
 ---
 
@@ -104,24 +111,23 @@ El shrinkage ya compensa la poca muestra en el número final, pero este indicado
 
 ## Validación
 
-## Validación
+Resultados obtenidos con `scripts/clutch_rating.py` (V1.1) sobre los 6 jugadores actuales de Ace Stats:
 
-Resultados obtenidos con `scripts/clutch_rating.py` sobre los 6 jugadores actuales de Ace Stats:
-
-| Jugador | Clutch Rating |
-|---|---:|
-| Jannik Sinner | 100.0 |
-| Rafael Nadal | 98.8 |
-| Novak Djokovic | 98.8 |
-| Carlos Alcaraz | 96.9 |
-| Roger Federer | 95.5 |
-| Daniil Medvedev | 78.0 |
+| Jugador | Clutch Rating V1.1 | (V1.0) |
+|---|---:|---:|
+| Novak Djokovic | 98.5 | 98.8 |
+| Jannik Sinner | 98.3 | 100.0 |
+| Rafael Nadal | 97.8 | 98.8 |
+| Carlos Alcaraz | 96.7 | 96.9 |
+| Roger Federer | 96.2 | 95.5 |
+| Daniil Medvedev | 85.6 | 78.0 |
 
 **Chequeos:**
-- ✅ El ranking coincide con la percepción general del circuito: Djokovic y Nadal arriba (reputación de fortaleza mental), Federer un escalón por debajo (patrón real y documentado en su historial vs. Djokovic/Nadal en tiebreaks y sets decisivos), Medvedev claramente último (consistente con sus stats de presión sistemáticamente más bajas ya detectadas en sesiones anteriores).
+- ✅ El ranking coincide con la percepción general del circuito: Djokovic arriba (reputación de fortaleza mental), Federer último del Big 3 — arrastrado sobre todo por BP Convertidos (81.2), consistente con su patrón real y documentado de desperdiciar break points vs. Djokovic/Nadal — y Medvedev claramente último (consistente con sus stats de presión sistemáticamente más bajas ya detectadas en sesiones anteriores).
 - ✅ Ningún jugador queda fuera del rango 0-100.
-- ✅ Hay variación real entre los 6 (78.0 a 100.0), no están todos agrupados.
-- ⚠️ **Caso a observar:** Sinner llegó exacto a 100.0 — sus 6 estadísticas superan el P95 del circuito y se truncan al techo. Es el comportamiento documentado (ver "Escala" en Normalización), no un error, pero significa que su número no puede subir más aunque siga mejorando, mientras esté en este nivel de dominancia. Revisar si esto se vuelve un problema real a medida que pase el tiempo.
+- ✅ Hay variación real entre los 6 (85.6 a 98.5), sin empates en el total.
+- ✅ Se resolvió el empate Nadal-Djokovic de la V1.0 (ambos 98.8) y desapareció el 100.0 chato de Sinner: sus subscores ahora van de 95.8 a 99.5.
+- ✅ Los subscores diferencian dentro de cada jugador: todos tienen fortalezas y debilidades visibles en el desglose.
 
 ---
 
@@ -131,22 +137,42 @@ Resultados obtenidos con `scripts/clutch_rating.py` sobre los 6 jugadores actual
 - No mide el nivel general del jugador, solo su rendimiento bajo presión en las 6 situaciones definidas
 - Los Umbrales V1 y los pesos son decisiones de diseño documentadas, no verdades matemáticas — pueden revisarse
 - La población de referencia (desde el año 2000) excluye eras anteriores por decisión metodológica
-- En 4 de las 6 estadísticas (Tiebreaks, Set decisivo, Remontadas, BP Convertidos), los jugadores de élite ya cargados en Ace Stats caen en o por encima del P95 de todo el circuito — esperable, dado que ser un campeón histórico correlaciona con rendir bien bajo presión. Consecuencia: esas 4 estadísticas diferencian poco *entre* los jugadores actuales de Ace Stats (todos cerca de 100), mientras que Finales y BP Salvados sí distinguen mejor entre ellos. Esto se corrige solo a medida que se agreguen jugadores de nivel medio al roster — no requiere cambiar la metodología.
+- Rendir bien bajo presión correlaciona con ser un jugador de élite en general; la métrica no separa completamente "clutch" de "muy bueno". Es una limitación conocida de toda métrica de presión basada en resultados.
+- En la cola alta (jugadores de élite), los percentiles se acercan entre sí por construcción: el top 5 de Ace Stats queda entre 96.2 y 98.5. Por ahora el orden es claro y sin empates; si al agregar más jugadores de élite la compresión se vuelve un problema, está anotada una posible transformación (ver Cambios futuros).
 
 ---
 
 ## Decisiones tomadas
 
 - **Año 2000 como corte de la población de referencia:** se descartó 1968 (dataset completo) por diferencias de época; se descartó 1998 (propuesta inicial) porque no correspondía a ningún corte real del dataset, era una inferencia incorrecta.
-- **Percentiles P5-P95 en vez de mínimo/máximo:** evita que un caso extremo con poca muestra defina los bordes de la escala.
+- **Percentil real en vez de interpolación lineal P5-P95 (V1.1):** la escala lineal truncaba en 100 todo lo que superara el P95 y saturaba para jugadores de élite — exactamente el segmento que Ace Stats existe para comparar. El percentil conserva resolución en la cola alta y además mejora la interpretación: el subscore *es* el percentil.
+- **Shrinkage aplicado a toda la población antes de rankear (V1.1):** comparar ajustado contra ajustado; si no, el shrinkage penalizaría injustamente al jugador evaluado.
 - **Shrinkage con k = umbral mínimo de cada estadística:** reutiliza una decisión ya tomada en vez de sumar un parámetro nuevo sin fundamento.
 - **Mediana (P50) en vez de promedio como referencia del shrinkage:** más robusta ante distribuciones sesgadas.
 - **Finales subió de 20% a 25% de peso** pese a tener la muestra más chica de las 6 estadísticas — compensado explícitamente por el shrinkage, no ignorado.
 - **Finales excluye walkovers sin marcador registrado:** un partido de presión requiere sets reales jugados; una final decidida por abandono antes de empezar no es una situación de presión medible. Esto genera una diferencia de 1-2 partidos vs. conteos anteriores para algunos jugadores — diferencia menor y deliberada.
+- **Un solo cambio de variable por revisión:** la V1.1 modificó únicamente la normalización (pesos, shrinkage, umbrales y confianza quedaron idénticos), para poder atribuir el impacto observado a esa única decisión.
+
+---
+
+## Historial de revisiones
+
+### V1.0 (junio 2026)
+Primera versión completa: 6 estadísticas ponderadas, shrinkage bayesiano hacia el P50, normalización lineal P5→0 / P95→100 con truncado, nivel de confianza por muestra.
+
+**Problema detectado:** saturación en la cola alta. Los jugadores de élite superan el P95 del circuito en casi todas las estadísticas, por lo que el truncado a 100 borraba las diferencias entre ellos. Síntoma visible: Sinner con 100.0 y las 6 componentes en 100; Nadal y Djokovic empatados en 98.8. El documento V1.0 ya lo había marcado como "caso a observar" — la observación confirmó que sí era un problema, porque el uso principal de Ace Stats es comparar élite contra élite, y la resolución arriba importa más que abajo.
+
+### V1.1 (julio 2026) — vigente
+Cambio único: la normalización pasa de interpolación lineal P5-P95 a **percentil real dentro de la población de referencia**, con el shrinkage aplicado simétricamente a toda la población antes de rankear. Sin cambios en pesos, shrinkage, umbrales ni confianza.
+
+**Resultado:** desapareció la saturación (ningún subscore chato en 100 para los 6 jugadores), se resolvió el empate Nadal-Djokovic, y el desglose por componente recuperó poder informativo. Efecto colateral: el promedio ATP del rating pasó de 47.6 a 46.9.
+
+---
 
 ## Cambios futuros
 
 - Revisar Umbrales V1 cuando el roster de jugadores crezca
 - Ajustar pesos con feedback real de usuarios una vez publicado
 - Evaluar incorporar quintosSetGS (ya calculado en `calcular_stats.py` pero no incluido en esta versión)
-- Mostrar el desglose por estadística en el perfil del jugador, no solo el número final
+- **Transformación de la cola alta (anotado en V1.1, no implementado):** si al crecer el roster los percentiles de la élite se comprimen demasiado (ej. varios jugadores entre 99.8 y 99.9), evaluar una transformación logística o tipo Elo sobre el percentil. Solo si los datos lo muestran necesario.
+- **Percentil entre élite como vista secundaria (anotado en V1.1, no implementado):** mostrar opcionalmente cómo rankea un jugador dentro de una población de élite (ej. top 20 histórico). Descartado como base de la métrica: la muestra chica hace los percentiles ruidosos, y "percentil 55 entre leyendas" se lee como mediocridad aunque no lo sea. Podría funcionar como comparación adicional, nunca como el número principal.
