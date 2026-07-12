@@ -1,6 +1,6 @@
 # Ace Stats — Roadmap
 
-> Última actualización: 26/06/2026
+> Última actualización: 12/07/2026
 > Este documento vive en el repo para no depender de que una conversación
 > vieja con Claude no se pierda (ya nos pasó una vez con un script).
 
@@ -12,7 +12,7 @@ donde los fans descubren estadísticas interesantes, no solo resultados.
 
 ---
 
-## v1.0 — Fundación (en curso, ~80% hecho)
+## v1.0 — Fundación (en curso, ~85% hecho)
 
 **Objetivo:** la base sólida de datos y arquitectura sobre la que se
 construye todo lo demás.
@@ -20,28 +20,33 @@ construye todo lo demás.
 - [x] Web funcionando, publicada en Vercel
 - [x] Arquitectura dinámica (`/jugadores/[nombre]` lee de `jugadores.ts`)
 - [x] Comparador de 2 jugadores
-- [x] Datos reales (no inventados) para 5 jugadores, desde dataset histórico
+- [x] Datos reales (no inventados) para 6 jugadores, desde dataset histórico
 - [x] Metodología de cálculo documentada y reproducible (`calcular_stats.py`)
 - [x] 11 estadísticas avanzadas por jugador, auditadas contra ATP oficial donde se puede
+- [x] Guardar `calcular_stats.py` en `ace-stats/scripts/`
+- [x] Datos frescos hasta 2026 (fuente TennisMyLife, mismo esquema Sackmann)
 - [ ] Llegar a ~30 jugadores (activos primero, leyendas después)
 - [ ] Aviso "datos actualizados al [fecha]" para jugadores activos
 - [ ] Prolijada general: `.toFixed(1)` en todos los campos numéricos
-- [ ] Guardar `calcular_stats.py` en `ace-stats/scripts/`
+- [ ] Mostrar BP salvados/convertidos % en el perfil (ya calculados, no visibles)
 
-## v1.5 — Profundidad y marca propia
+## v1.5 — Profundidad y marca propia (en curso, núcleo hecho)
 
 **Objetivo:** features que no necesitan usuarios ni base de datos nueva,
 solo más cálculo sobre los datos que ya existen.
 
-- [ ] **Records / leaderboard** — ranking de "mejor de la historia" por
-  estadística (ej. mejor % de tiebreaks, más semanas en #1). No hace
-  falta esperar a la base de datos: con 30 jugadores en el array ya
-  se puede ordenar y mostrar un top.
-- [ ] **Clutch Rating** — fórmula propia, documentada de forma transparente
-  (es la marca de la casa, pero si no se explica cómo se calcula, pierde
-  credibilidad).
+- [x] **Records / leaderboard** — `/records` con tabs Métricas, Carrera,
+  Presión y Superficie. Link "Rankings" activo en la navbar.
+- [x] **Clutch Rating** — fórmula propia V1.1 (percentil real + shrinkage),
+  documentada en `CLUTCH_RATING.md` con historial de revisiones. Visible
+  en el perfil de cada jugador (desglose) y en la tab Métricas de Records
+  (ranking + explicación). La tab Métricas es el hogar de las métricas
+  propias de Ace Stats: si algún día hay una segunda, entra ahí sin
+  rediseño. Sin placeholders de métricas que no existen.
 - [ ] Estadísticas adicionales: récord vs Top 20, récord por ronda, por
   torneo, por temporada/década, % de sets y juegos ganados.
+- [ ] Court pace data (velocidad de superficie por torneo) — idea surgida
+  del análisis del competidor Tennis Tour Data.
 
 ## v1.8 — Rivalries (tratamiento aparte)
 
@@ -80,6 +85,30 @@ ser "un lugar donde los fans de tenis se juntan".
 - [ ] Brackets / torneos predictivos
 - [ ] Ligas privadas entre amigos
 - [ ] Predicciones de resultados
+
+---
+
+## Ideas anotadas (sin versión asignada)
+
+Cosas pensadas y deliberadamente no hechas todavía. Cada una tiene su
+razón documentada; ninguna se arranca sin pasar por la regla de oro.
+
+- **Contenido en español atado al calendario ATP** (video corto + posts
+  usando Ace Stats como motor de datos; el Telegram es el grupo de
+  prueba). En pausa hasta que la web esté más completa — decisión del
+  12/07: no quemar el anuncio del Clutch Rating con la versión mínima.
+- **Mejoras del Clutch Rating** (transformación de la cola alta, vista
+  "percentil entre élite") — detalladas en `CLUTCH_RATING.md`, sección
+  Cambios futuros. Solo si los datos lo muestran necesario.
+- **Promedio ponderado cuando falta una componente del Clutch Rating:**
+  hoy un jugador sin datos en una stat pierde ese peso entero (baja el
+  total). Discutible; revisar cuando entren jugadores con carreras cortas.
+- **Barras del ranking Métricas ancladas en el promedio ATP** (46.9) en
+  vez de 0, para amplificar diferencias visuales entre la élite.
+  Refinamiento estético, no urgente.
+- **Licencia de datos:** CC BY-NC-SA (no comercial). Resuelto para el
+  proyecto gratuito con atribución en el footer; requiere resolución
+  (otra fuente, permiso o asesoría) antes de cualquier monetización.
 
 ---
 
