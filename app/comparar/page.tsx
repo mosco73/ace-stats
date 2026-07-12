@@ -87,11 +87,11 @@ export default function CompararPage() {
               <div key={fila.key}>
                 <div className="grid grid-cols-3 items-center text-sm mb-2">
                   <div className={`text-left font-bold ${ganaJ1 ? "text-yellow-400" : "text-zinc-300"}`}>
-                    {v1}%
+                    {v1.toFixed(1)}%
                   </div>
                   <div className="text-center text-zinc-500 text-xs">{fila.label}</div>
                   <div className={`text-right font-bold ${ganaJ2 ? "text-yellow-400" : "text-zinc-300"}`}>
-                    {v2}%
+                    {v2.toFixed(1)}%
                   </div>
                 </div>
                 <div className="flex h-2 rounded-full overflow-hidden bg-zinc-800">

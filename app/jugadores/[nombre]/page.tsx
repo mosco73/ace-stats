@@ -1,4 +1,4 @@
-import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "../../data/jugadores";
+import { jugadores, CLUTCH_RATING_PROMEDIO_ATP } from "../../data/jugadores";
 import { notFound } from "next/navigation";
 
 export default async function JugadorPage({
@@ -53,7 +53,7 @@ export default async function JugadorPage({
           </h2>
         </div>
         <div className="flex items-baseline gap-3 mb-1">
-          <span className="text-5xl font-bold">{jugador.clutchRating.total}</span>
+          <span className="text-5xl font-bold">{jugador.clutchRating.total.toFixed(1)}</span>
           <span className="text-sm text-zinc-500">
             {jugador.clutchRating.confianzaGlobal === "alta"
               ? "🟢 Alta confianza"
@@ -64,49 +64,49 @@ export default async function JugadorPage({
         </div>
         <p className="text-zinc-400 text-sm mb-4">Capacidad para rendir bajo presión</p>
         <div className="flex gap-6 text-sm text-zinc-400 mb-4">
-          <span>Percentil {jugador.clutchRating.percentil}</span>
+          <span>Percentil {jugador.clutchRating.percentil.toFixed(1)}</span>
           <span>Promedio ATP: {CLUTCH_RATING_PROMEDIO_ATP}</span>
         </div>
         <div className="border-t border-zinc-800 pt-4 space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">Tie-breaks</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.tiebreaks.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.tiebreaks.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.tiebreaks.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.tiebreaks.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">Set decisivo</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.setDecisivo.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.setDecisivo.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.setDecisivo.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.setDecisivo.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">Finales</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.finales.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.finales.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.finales.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.finales.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">Remontadas</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.remontadas.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.remontadas.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.remontadas.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.remontadas.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">BP salvados</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.bpSalvados.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.bpSalvados.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.bpSalvados.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.bpSalvados.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-400">BP convertidos</span>
             <span className="flex items-center gap-2">
-              <span className="font-semibold">{jugador.clutchRating.detalle.bpConvertidos.normalizado}</span>
+              <span className="font-semibold">{jugador.clutchRating.detalle.bpConvertidos.normalizado.toFixed(1)}</span>
               <span>{jugador.clutchRating.detalle.bpConvertidos.confianza === "alta" ? "🟢" : jugador.clutchRating.detalle.bpConvertidos.confianza === "moderada" ? "🟡" : "🔴"}</span>
             </span>
           </div>
@@ -115,59 +115,54 @@ export default async function JugadorPage({
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                     Estadísticas avanzadas
                 </h2>
-                {jugador.ranking !== -1 && (
-    <p className="text-xs text-zinc-500 mb-4">
-        Datos actualizados al {DATOS_ACTUALIZADOS_AL}
-    </p>
-)}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Tie-breaks ganados</div>
-                        <div className="text-2xl font-bold">{jugador.stats.tiebreaks}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.tiebreaks.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Set decisivo</div>
-                        <div className="text-2xl font-bold">{jugador.stats.setDecisivo}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.setDecisivo.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Histórico ATP</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Remontadas</div>
-                        <div className="text-2xl font-bold">{jugador.stats.remontadas}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.remontadas.toFixed(1)}%</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">vs Top 10</div>
-                        <div className="text-2xl font-bold">{jugador.stats.vsTop10}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.vsTop10.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Conversión finales</div>
-                        <div className="text-2xl font-bold">{jugador.stats.finales}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.finales.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">5to set en Grand Slams</div>
-                        <div className="text-2xl font-bold">{jugador.stats.quintosSetGS}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.quintosSetGS.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">Histórico</div>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Masters 1000</div>
-                        <div className="text-2xl font-bold">{jugador.stats.masters1000.pct}%</div>
+                        <div className="text-2xl font-bold">{jugador.stats.masters1000.pct.toFixed(1)}%</div>
                         <div className="text-xs text-zinc-500 mt-1">{jugador.stats.masters1000.victorias}V · {jugador.stats.masters1000.derrotas}D</div>
                     </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Break points salvados</div>
-                    <div className="text-2xl font-bold">{jugador.stats.bpSalvados}%</div>
+                    <div className="text-2xl font-bold">{jugador.stats.bpSalvados.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Break points convertidos</div>
-                    <div className="text-2xl font-bold">{jugador.stats.bpConvertidos}%</div>
+                    <div className="text-2xl font-bold">{jugador.stats.bpConvertidos.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Juegos de saque ganados</div>
-                    <div className="text-2xl font-bold">{jugador.stats.svGanados}%</div>
+                    <div className="text-2xl font-bold">{jugador.stats.svGanados.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
@@ -183,15 +178,15 @@ export default async function JugadorPage({
             <div className="grid grid-cols-3 gap-4 mb-8">
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Dura</div>
-                    <div className="text-xl font-bold text-blue-400">{jugador.superficie.vsTop10PorSuperficie.dura}%</div>
+                    <div className="text-xl font-bold text-blue-400">{jugador.superficie.vsTop10PorSuperficie.dura.toFixed(1)}%</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
-                    <div className="text-xl font-bold text-orange-400">{jugador.superficie.vsTop10PorSuperficie.arcilla}%</div>
+                    <div className="text-xl font-bold text-orange-400">{jugador.superficie.vsTop10PorSuperficie.arcilla.toFixed(1)}%</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Césped</div>
-                    <div className="text-xl font-bold text-green-400">{jugador.superficie.vsTop10PorSuperficie.cesped}%</div>
+                    <div className="text-xl font-bold text-green-400">{jugador.superficie.vsTop10PorSuperficie.cesped.toFixed(1)}%</div>
                 </div>
             </div>
 
@@ -211,7 +206,7 @@ export default async function JugadorPage({
                                     <div className={`w-2 h-2 rounded-full bg-${color}-400`}></div>
                                     <span>{nombres[sup]}</span>
                                 </div>
-                                <span className="font-semibold">{d.pct}%</span>
+                                <span className="font-semibold">{d.pct.toFixed(1)}%</span>
                             </div>
                             <div className="w-full bg-zinc-800 rounded-full h-2">
                                 <div className={`bg-${color}-400 h-2 rounded-full`} style={{ width: `${d.pct}%` }}></div>

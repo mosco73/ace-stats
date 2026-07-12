@@ -62,15 +62,15 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <div className="bg-zinc-800 rounded-xl p-2 text-center">
-                    <div className="text-base font-bold">{j.stats.tiebreaks}%</div>
+                    <div className="text-base font-bold">{j.stats.tiebreaks.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Tie-breaks</div>
                   </div>
                   <div className="bg-zinc-800 rounded-xl p-2 text-center">
-                    <div className="text-base font-bold">{j.stats.setDecisivo}%</div>
+                    <div className="text-base font-bold">{j.stats.setDecisivo.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Set decisivo</div>
                   </div>
                   <div className="bg-zinc-800 rounded-xl p-2 text-center">
-                    <div className="text-base font-bold">{j.stats.vsTop10}%</div>
+                    <div className="text-base font-bold">{j.stats.vsTop10.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">vsTop10</div>
                   </div>
                 </div>
@@ -101,11 +101,11 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-zinc-800 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold">{j.stats.tiebreaks}%</div>
+                    <div className="text-lg font-bold">{j.stats.tiebreaks.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Tie-breaks</div>
                   </div>
                   <div className="bg-zinc-800 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold">{j.superficie.arcilla.pct}%</div>
+                    <div className="text-lg font-bold">{j.superficie.arcilla.pct.toFixed(1)}%</div>
                     <div className="text-xs text-zinc-500 mt-1">Arcilla</div>
                   </div>
                   <div className="bg-zinc-800 rounded-xl p-3 text-center">

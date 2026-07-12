@@ -34,27 +34,27 @@ const categoriasPresion: Categoria[] = [
   {
     label: "vs Top 10",
     valor: (j) => j.stats.vsTop10,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Tiebreaks",
     valor: (j) => j.stats.tiebreaks,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Set decisivo",
     valor: (j) => j.stats.setDecisivo,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Remontadas",
     valor: (j) => j.stats.remontadas,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Conversión de finales",
     valor: (j) => j.stats.finales,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
 ];
 
@@ -62,22 +62,22 @@ const categoriasSuperficie: Categoria[] = [
   {
     label: "Dura",
     valor: (j) => j.superficie.dura.pct,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Arcilla",
     valor: (j) => j.superficie.arcilla.pct,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Césped",
     valor: (j) => j.superficie.cesped.pct,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
   {
     label: "Indoor",
     valor: (j) => j.superficie.indoor.pct,
-    formato: (v) => `${v}%`,
+    formato: (v) => `${v.toFixed(1)}%`,
   },
 ];
 
@@ -158,13 +158,13 @@ function SeccionMetricas() {
                   </span>
                 </div>
                 <span className="font-bold text-lg">
-                  {j.clutchRating.total}
+                  {j.clutchRating.total.toFixed(1)}
                 </span>
               </div>
               <div className="ml-8 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-yellow-400 rounded-full"
-                  style={{ width: `${j.clutchRating.total}%` }}
+                  style={{ width: `${j.clutchRating.total.toFixed(1)}%` }}
                 />
               </div>
             </div>
