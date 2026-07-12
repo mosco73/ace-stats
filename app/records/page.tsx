@@ -1,6 +1,6 @@
 "use client";
 
-import { jugadores } from "../data/jugadores";
+import { jugadores, CLUTCH_RATING_PROMEDIO_ATP } from "../data/jugadores";
 import { useState } from "react";
 
 const colores: Record<string, string> = {
@@ -81,6 +81,15 @@ const categoriasSuperficie: Categoria[] = [
   },
 ];
 
+const componentesClutch = [
+  { label: "Set decisivo", peso: "25%" },
+  { label: "Finales", peso: "25%" },
+  { label: "Tie-breaks", peso: "20%" },
+  { label: "BP salvados", peso: "10%" },
+  { label: "BP convertidos", peso: "10%" },
+  { label: "Remontadas", peso: "10%" },
+];
+
 function TablaRecord({ categoria }: { categoria: Categoria }) {
   const ordenados = [...jugadores].sort(
     (a, b) => categoria.valor(b) - categoria.valor(a)
@@ -111,8 +120,97 @@ function TablaRecord({ categoria }: { categoria: Categoria }) {
   );
 }
 
+function SeccionMetricas() {
+  const ordenados = [...jugadores].sort(
+    (a, b) => b.clutchRating.total - a.clutchRating.total
+  );
+
+  return (
+    <div className="space-y-4 md:col-span-2">
+      {/* Header de la métrica */}
+      <div className="bg-zinc-900 border border-yellow-400/40 rounded-2xl p-6">
+        <div className="flex items-center gap-2 mb-2">
+          <span>⭐</span>
+          <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest">
+            Clutch Rating
+          </h2>
+        </div>
+        <p className="text-zinc-300">
+          La métrica propia de Ace Stats. Mide el rendimiento bajo presión
+          combinando seis situaciones clave de la carrera de un jugador,
+          comparadas contra todo el circuito ATP desde el año 2000.
+        </p>
+      </div>
+
+      {/* Ranking */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+        <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+          Ranking histórico
+        </h3>
+        <div className="space-y-3">
+          {ordenados.map((j, i) => (
+            <div key={j.id} className="py-1">
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-3">
+                  <span className="text-zinc-500 text-sm w-5">{i + 1}</span>
+                  <span className={`font-semibold ${colores[j.id]}`}>
+                    {j.nombre}
+                  </span>
+                </div>
+                <span className="font-bold text-lg">
+                  {j.clutchRating.total}
+                </span>
+              </div>
+              <div className="ml-8 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-yellow-400 rounded-full"
+                  style={{ width: `${j.clutchRating.total}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-zinc-500 text-sm mt-4">
+          Promedio ATP: {CLUTCH_RATING_PROMEDIO_ATP} · Escala 0-100
+        </p>
+      </div>
+
+      {/* Cómo se calcula */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+        <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+          ¿Cómo se calcula?
+        </h3>
+        <p className="text-zinc-300 mb-4">
+          Cada componente es el percentil del jugador dentro del circuito: un
+          97 significa &ldquo;mejor que el 97% de los jugadores ATP en esa
+          situación&rdquo;. El número final es el promedio ponderado de las
+          seis, con ajuste estadístico para muestras chicas.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {componentesClutch.map((c) => (
+            <div
+              key={c.label}
+              className="flex items-center justify-between bg-zinc-800/60 rounded-lg px-3 py-2"
+            >
+              <span className="text-sm text-zinc-300">{c.label}</span>
+              <span className="text-sm font-semibold text-yellow-400">
+                {c.peso}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="text-zinc-500 text-sm mt-4">
+          El desglose completo de cada jugador está en su perfil.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function Records() {
- const [tab, setTab] = useState<"carrera" | "presion" | "superficie">("carrera");
+  const [tab, setTab] = useState<
+    "metricas" | "carrera" | "presion" | "superficie"
+  >("metricas");
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -123,7 +221,17 @@ export default function Records() {
         </p>
       </section>
 
-      <section className="px-6 max-w-3xl mx-auto mb-8 flex gap-2 justify-center">
+      <section className="px-6 max-w-3xl mx-auto mb-8 flex gap-2 justify-center flex-wrap">
+        <button
+          onClick={() => setTab("metricas")}
+          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+            tab === "metricas"
+              ? "bg-yellow-400 text-zinc-950"
+              : "bg-zinc-900 text-zinc-400 hover:text-white"
+          }`}
+        >
+          ⭐ Métricas
+        </button>
         <button
           onClick={() => setTab("carrera")}
           className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
@@ -156,7 +264,8 @@ export default function Records() {
         </button>
       </section>
 
-<section className="px-6 max-w-3xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section className="px-6 max-w-3xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {tab === "metricas" && <SeccionMetricas />}
         {tab === "carrera" &&
           categoriasCarrera.map((cat) => (
             <TablaRecord key={cat.label} categoria={cat} />
