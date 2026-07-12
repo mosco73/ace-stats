@@ -1,4 +1,5 @@
 export const CLUTCH_RATING_PROMEDIO_ATP = 46.9;
+export const DATOS_ACTUALIZADOS_AL = "27/06/2026";
 export const jugadores = [
   {
     id: "djokovic",
