@@ -1,4 +1,4 @@
-import { jugadores, CLUTCH_RATING_PROMEDIO_ATP } from "../../data/jugadores";
+import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "../../data/jugadores";
 import { notFound } from "next/navigation";
 
 export default async function JugadorPage({
@@ -115,6 +115,11 @@ export default async function JugadorPage({
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                     Estadísticas avanzadas
                 </h2>
+                {jugador.ranking !== -1 && (
+    <p className="text-xs text-zinc-500 mb-4">
+        Datos actualizados al {DATOS_ACTUALIZADOS_AL}
+    </p>
+)}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Tie-breaks ganados</div>
