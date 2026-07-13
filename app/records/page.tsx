@@ -10,6 +10,7 @@ const colores: Record<string, string> = {
   alcaraz: "text-blue-400",
   sinner: "text-green-400",
   medvedev: "text-purple-400",
+  murray: "text-cyan-400",
 };
 
 type Categoria = {

@@ -6,7 +6,7 @@ const destacados = jugadores.filter(j =>
 );
 
 const leyendas = jugadores.filter(j => 
-  ["federer", "nadal"].includes(j.id)
+  ["federer", "nadal", "murray"].includes(j.id)
 );
 
 const colores: Record<string, string> = {
@@ -16,6 +16,7 @@ const colores: Record<string, string> = {
   alcaraz: "text-blue-400",
   sinner: "text-green-400",
   medvedev: "text-purple-400",
+  murray: "text-cyan-400",
 };
 
 export default function Home() {
