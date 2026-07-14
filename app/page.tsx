@@ -9,25 +9,6 @@ const leyendas = jugadores.filter(j =>
   ["federer", "nadal", "murray"].includes(j.id)
 );
 
-const colores: Record<string, string> = {
-  federer: "text-red-400",
-  nadal: "text-orange-400",
-  djokovic: "text-yellow-400",
-  alcaraz: "text-blue-400",
-  sinner: "text-green-400",
-  medvedev: "text-purple-400",
-  murray: "text-cyan-400",
-  zverev: "text-teal-400",
-  tsitsipas: "text-sky-400",
-  fritz: "text-indigo-400",
-  wawrinka: "text-rose-400",
-  rublev: "text-pink-400",
-  ruud: "text-lime-400",
-  shelton: "text-violet-400",
-  delpotro: "text-fuchsia-400",
-  roddick: "text-emerald-400",
-};
-
 export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -62,7 +43,7 @@ export default function Home() {
             <Link key={j.id} href={`/jugadores/${j.id}`}>
               <div className="bg-zinc-900 border border-zinc-800 hover:border-yellow-400 rounded-2xl p-6 cursor-pointer transition-all">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className={`w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center font-bold ${colores[j.id]}`}>
+                 <div className="w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-yellow-400">
                     {j.nombre.split(" ").map(n => n[0]).join("").slice(0, 2)}
                   </div>
                   <div>
@@ -100,7 +81,7 @@ export default function Home() {
             <Link key={j.id} href={`/jugadores/${j.id}`}>
               <div className="bg-zinc-900 border border-zinc-800 hover:border-yellow-400 rounded-2xl p-6 cursor-pointer transition-all">
                 <div className="flex items-center gap-4 mb-5">
-                  <div className={`w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center font-bold ${colores[j.id]}`}>
+                  <div className="w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-yellow-400">
                     {j.nombre.split(" ").map(n => n[0]).join("").slice(0, 2)}
                   </div>
                   <div>

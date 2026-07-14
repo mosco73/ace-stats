@@ -3,25 +3,6 @@
 import { jugadores, CLUTCH_RATING_PROMEDIO_ATP } from "../data/jugadores";
 import { useState } from "react";
 
-const colores: Record<string, string> = {
-  federer: "text-red-400",
-  nadal: "text-orange-400",
-  djokovic: "text-yellow-400",
-  alcaraz: "text-blue-400",
-  sinner: "text-green-400",
-  medvedev: "text-purple-400",
-  murray: "text-cyan-400",
-  zverev: "text-teal-400",
-  tsitsipas: "text-sky-400",
-  fritz: "text-indigo-400",
-  wawrinka: "text-rose-400",
-  rublev: "text-pink-400",
-  ruud: "text-lime-400",
-  shelton: "text-violet-400",
-  delpotro: "text-fuchsia-400",
-  roddick: "text-emerald-400",
-};
-
 type Categoria = {
   label: string;
   valor: (j: typeof jugadores[number]) => number;
@@ -118,7 +99,7 @@ function TablaRecord({ categoria }: { categoria: Categoria }) {
           >
             <div className="flex items-center gap-3">
               <span className="text-zinc-500 text-sm w-5">{i + 1}</span>
-              <span className={`font-semibold ${colores[j.id]}`}>
+              <span className="font-semibold">
                 {j.nombre}
               </span>
             </div>
@@ -163,7 +144,7 @@ function SeccionMetricas() {
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-3">
                   <span className="text-zinc-500 text-sm w-5">{i + 1}</span>
-                  <span className={`font-semibold ${colores[j.id]}`}>
+                  <span className="font-semibold">
                     {j.nombre}
                   </span>
                 </div>
