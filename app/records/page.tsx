@@ -205,6 +205,15 @@ export default function Records() {
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
+      <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+          <a href="/" className="font-semibold tracking-tight hover:text-yellow-400">Ace Stats</a>
+        </div>
+        <div className="flex gap-6 text-sm text-zinc-400">
+          <a href="/" className="hover:text-white">← Volver</a>
+        </div>
+      </nav>
       <section className="px-6 py-16 text-center">
         <h1 className="text-4xl font-bold tracking-tight mb-4">Records</h1>
         <p className="text-zinc-400 text-lg max-w-xl mx-auto">
