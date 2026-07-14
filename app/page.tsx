@@ -17,6 +17,10 @@ const colores: Record<string, string> = {
   sinner: "text-green-400",
   medvedev: "text-purple-400",
   murray: "text-cyan-400",
+  zverev: "text-teal-400",
+  tsitsipas: "text-sky-400",
+  fritz: "text-indigo-400",
+  wawrinka: "text-rose-400",
 };
 
 export default function Home() {
