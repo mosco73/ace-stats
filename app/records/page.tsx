@@ -15,6 +15,11 @@ const colores: Record<string, string> = {
   tsitsipas: "text-sky-400",
   fritz: "text-indigo-400",
   wawrinka: "text-rose-400",
+  rublev: "text-pink-400",
+  ruud: "text-lime-400",
+  shelton: "text-violet-400",
+  delpotro: "text-fuchsia-400",
+  roddick: "text-emerald-400",
 };
 
 type Categoria = {
