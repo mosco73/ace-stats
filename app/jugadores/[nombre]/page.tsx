@@ -21,7 +21,7 @@ export default async function JugadorPage({
                     <a href="/" className="font-semibold tracking-tight hover:text-yellow-400">Ace Stats</a>
                 </div>
                 <div className="flex gap-6 text-sm text-zinc-400">
-                    <a href="/" className="hover:text-white">← Volver</a>
+                    <a href="/jugadores" className="hover:text-white">← Volver</a>
                 </div>
             </nav>
 
