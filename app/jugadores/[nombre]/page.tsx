@@ -62,7 +62,7 @@ export default async function JugadorPage({
               : "🔴 Muestra insuficiente"}
           </span>
         </div>
-        <p className="text-zinc-400 text-sm mb-4">Capacidad para rendir bajo presión</p>
+        <p className="text-zinc-400 text-sm mb-4">Capacidad para rendir bajo presión · vs. circuito ATP desde 2000 · <a href="/metodologia" className="text-yellow-400 hover:underline">metodología</a></p>
         <div className="flex gap-6 text-sm text-zinc-400 mb-4">
           <span>Percentil {jugador.clutchRating.percentil.toFixed(1)}</span>
           <span>Promedio ATP: {CLUTCH_RATING_PROMEDIO_ATP}</span>

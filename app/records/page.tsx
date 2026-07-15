@@ -191,7 +191,7 @@ function SeccionMetricas() {
           ))}
         </div>
         <p className="text-zinc-500 text-sm mt-4">
-          El desglose completo de cada jugador está en su perfil.
+          El desglose completo de cada jugador está en su perfil. <a href="/metodologia" className="text-yellow-400 hover:underline">Metodología completa →</a>
         </p>
       </div>
     </div>
