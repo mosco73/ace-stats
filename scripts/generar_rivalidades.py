@@ -23,6 +23,11 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 RUTA_JUGADORES = os.path.join(DIR, "..", "app", "data", "jugadores.ts")
 RUTA_SALIDA = os.path.join(DIR, "..", "app", "data", "rivalidades.ts")
 
+# Nombres del sitio -> nombres del dataset (cuando difieren)
+NOMBRES_DATASET = {
+    "Alex de Miñaur": "Alex De Minaur",
+}
+
 
 def leer_roster():
     """Extrae los pares (id, nombre) de jugadores.ts."""
@@ -32,7 +37,7 @@ def leer_roster():
     if len(ids) != len(nombres):
         print(f"ERROR: {len(ids)} ids pero {len(nombres)} nombres en jugadores.ts")
         sys.exit(1)
-    return dict(zip(ids, nombres))
+    return {i: NOMBRES_DATASET.get(n, n) for i, n in zip(ids, nombres)}
 
 
 def h2h(df, nombre_a, nombre_b):

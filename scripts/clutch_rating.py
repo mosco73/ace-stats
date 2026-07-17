@@ -13,7 +13,7 @@ SHRINKAGE = {
     "tiebreaks":     {"p50": 50.0, "k": 30},
     "setDecisivo":   {"p50": 50.0, "k": 30},
     "finales":       {"p50": 45.5, "k": 10},
-    "remontadas":    {"p50": 16.4, "k": 25},
+    "remontadas":    {"p50": 16.5, "k": 25},
     "bpSalvados":    {"p50": 60.4, "k": 0},
     "bpConvertidos": {"p50": 39.2, "k": 0},
 }

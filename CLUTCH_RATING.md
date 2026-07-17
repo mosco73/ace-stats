@@ -156,6 +156,9 @@ Resultados obtenidos con `scripts/clutch_rating.py` (V1.1) sobre los 6 jugadores
 ---
 
 ## Historial de revisiones
+### Revisión de datos — julio 2026 (con V1.1)
+
+Se **incluyen los Juegos Olímpicos** en todo el pipeline (antes excluidos). Razones: son partidos de máxima importancia para los jugadores de la era moderna (con puntos ATP desde 2009), la exclusión original no reflejaba una convicción del producto, y alinea los head-to-heads con los números oficiales que los fans conocen (ej. Djokovic-Nadal 31-29). Impacto: +669 partidos, población elegible 396→397, P50 de remontadas 16.4→16.5, cambios de décimas en los ratings (mayor suba: Del Potro +0.8 por su historia olímpica; único cambio de orden: Zverev supera a Hewitt gracias al oro de Tokio 2020). Los ratings se regeneraron con `scripts/regenerar_todos.py`, herramienta nueva de mantenimiento.
 
 ### V1.0 (junio 2026)
 Primera versión completa: 6 estadísticas ponderadas, shrinkage bayesiano hacia el P50, normalización lineal P5→0 / P95→100 con truncado, nivel de confianza por muestra.

@@ -62,8 +62,6 @@ def cargar_todo():
             df["fuente"] = "fresco"
             dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
-    df = df[~df["tourney_name"].astype(str).str.contains("olympic", case=False, na=False)]
-    df = df[df["tourney_level"].astype(str) != "O"]
     print(f"Total: {len(df)} partidos\n")
     return df
 
