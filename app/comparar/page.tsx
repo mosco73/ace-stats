@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { jugadores } from "../data/jugadores";
 
+type Jugador = typeof jugadores[number];
+
 export default function CompararPage() {
   const [id1, setId1] = useState("djokovic");
   const [id2, setId2] = useState("sinner");
@@ -10,14 +12,18 @@ export default function CompararPage() {
   const j1 = jugadores.find((j) => j.id === id1)!;
   const j2 = jugadores.find((j) => j.id === id2)!;
 
-  const filas = [
-    { label: "Tie-breaks ganados", key: "tiebreaks" },
-    { label: "Set decisivo", key: "setDecisivo" },
-    { label: "Remontadas", key: "remontadas" },
-    { label: "vs Top 10", key: "vsTop10" },
-    { label: "Conversión finales", key: "finales" },
-    { label: "Indoor", key: "indoor" },
-  ] as const;
+  const filas: { label: string; valor: (j: Jugador) => number; sufijo: string }[] = [
+    { label: "⭐ Clutch Rating", valor: (j) => j.clutchRating.total, sufijo: "" },
+    { label: "Tie-breaks ganados", valor: (j) => j.stats.tiebreaks, sufijo: "%" },
+    { label: "Set decisivo", valor: (j) => j.stats.setDecisivo, sufijo: "%" },
+    { label: "Remontadas", valor: (j) => j.stats.remontadas, sufijo: "%" },
+    { label: "vs Top 10", valor: (j) => j.stats.vsTop10, sufijo: "%" },
+    { label: "Conversión finales", valor: (j) => j.stats.finales, sufijo: "%" },
+    { label: "Dura", valor: (j) => j.superficie.dura.pct, sufijo: "%" },
+    { label: "Arcilla", valor: (j) => j.superficie.arcilla.pct, sufijo: "%" },
+    { label: "Césped", valor: (j) => j.superficie.cesped.pct, sufijo: "%" },
+    { label: "Indoor", valor: (j) => j.superficie.indoor.pct, sufijo: "%" },
+  ];
 
   const inicial = (nombre: string) =>
     nombre.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
@@ -78,20 +84,20 @@ export default function CompararPage() {
         {/* Comparación */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
           {filas.map((fila) => {
-            const v1 = j1.stats[fila.key];
-            const v2 = j2.stats[fila.key];
+            const v1 = fila.valor(j1);
+            const v2 = fila.valor(j2);
             const ganaJ1 = v1 > v2;
             const ganaJ2 = v2 > v1;
 
             return (
-              <div key={fila.key}>
+              <div key={fila.label}>
                 <div className="grid grid-cols-3 items-center text-sm mb-2">
                   <div className={`text-left font-bold ${ganaJ1 ? "text-yellow-400" : "text-zinc-300"}`}>
-                    {v1.toFixed(1)}%
+                    {v1.toFixed(1)}{fila.sufijo}
                   </div>
                   <div className="text-center text-zinc-500 text-xs">{fila.label}</div>
                   <div className={`text-right font-bold ${ganaJ2 ? "text-yellow-400" : "text-zinc-300"}`}>
-                    {v2.toFixed(1)}%
+                    {v2.toFixed(1)}{fila.sufijo}
                   </div>
                 </div>
                 <div className="flex h-2 rounded-full overflow-hidden bg-zinc-800">
