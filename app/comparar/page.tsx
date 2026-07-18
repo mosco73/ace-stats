@@ -29,6 +29,40 @@ export default function CompararPage() {
     Grass: "bg-green-400",
     Carpet: "bg-purple-400",
   };
+const inicial = (nombre: string) =>
+    nombre.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  // Contexto narrativo de la rivalidad (calculado del array de partidos)
+  const contexto = (() => {
+    if (!rivalidad || rivalidad.partidos.length === 0) return null;
+    const partidos = rivalidad.partidos;
+    const primero = partidos[0];
+    const ultimo = partidos[partidos.length - 1];
+    // mayor racha de victorias consecutivas
+    let mejorRacha = 0;
+    let mejorGanador: "a" | "b" = "a";
+    let rachaActual = 0;
+    let ganadorActual: "a" | "b" | null = null;
+    for (const p of partidos) {
+      if (p.ganador === ganadorActual) {
+        rachaActual++;
+      } else {
+        ganadorActual = p.ganador;
+        rachaActual = 1;
+      }
+      if (rachaActual > mejorRacha) {
+        mejorRacha = rachaActual;
+        mejorGanador = p.ganador;
+      }
+    }
+    const idRacha = mejorGanador === "a" ? rivalidad.jugadorA : rivalidad.jugadorB;
+    const nombreRacha = jugadores.find((j) => j.id === idRacha)!.nombre;
+    const anio = (f: number) => String(f).slice(0, 4);
+    return {
+      primera: `${primero.torneo} ${anio(primero.fecha)}`,
+      ultima: `${ultimo.torneo} ${anio(ultimo.fecha)}`,
+      racha: `${inicial(nombreRacha)} (${mejorRacha})`,
+    };
+  })();
 
   const desgloseH2H = [
     { label: "Dura", campo: "dura" as const, color: "bg-blue-400" },
@@ -52,9 +86,7 @@ export default function CompararPage() {
     { label: "Indoor", valor: (j) => j.superficie.indoor.pct, sufijo: "%" },
   ];
 
-  const inicial = (nombre: string) =>
-    nombre.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
-
+  
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
@@ -139,9 +171,9 @@ export default function CompararPage() {
 
         {/* Frente a frente */}
         {rivalidad ? (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
-            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5 text-center">
-              Frente a frente
+          <div className="bg-zinc-900 border border-yellow-400/30 rounded-2xl p-6 mt-8">
+            <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest mb-5 text-center">
+              🎾 Frente a frente
             </h2>
             <div className="flex items-center justify-center gap-4 mb-1">
               <span className={`text-4xl font-bold ${reg("total").v1 > reg("total").v2 ? "text-yellow-400" : ""}`}>
@@ -152,9 +184,16 @@ export default function CompararPage() {
                 {reg("total").v2}
               </span>
             </div>
-            <p className="text-center text-zinc-500 text-xs mb-6">
+            <p className="text-center text-zinc-500 text-xs mb-3">
               {reg("total").v1 + reg("total").v2} partidos
             </p>
+            {contexto && (
+              <p className="text-center text-zinc-500 text-xs mb-6">
+                Primera vez: <span className="text-zinc-300">{contexto.primera}</span>
+                {" · "}Último: <span className="text-zinc-300">{contexto.ultima}</span>
+                {" · "}Mayor racha: <span className="text-zinc-300">{contexto.racha}</span>
+              </p>
+            )}
 
             <div className="space-y-3">
               {desgloseH2H.map((d) => {
