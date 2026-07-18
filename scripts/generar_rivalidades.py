@@ -56,7 +56,20 @@ def h2h(df, nombre_a, nombre_b):
         va = int(sub["gana_a"].sum())
         return {"a": va, "b": len(sub) - va}
 
+    p = p.sort_values("tourney_date")
+    partidos = []
+    for _, r in p.iterrows():
+        partidos.append({
+            "fecha": int(r["tourney_date"]),
+            "torneo": str(r["tourney_name"]),
+            "ronda": str(r["round"]),
+            "superficie": str(r["surface"]),
+            "ganador": "a" if r["gana_a"] else "b",
+            "score": str(r["score"]),
+        })
+
     return {
+        "partidos": partidos,
         "total": registro(p),
         "dura": registro(p[p["surface"] == "Hard"]),
         "arcilla": registro(p[p["surface"] == "Clay"]),
@@ -75,6 +88,15 @@ def emitir_ts(rivalidades):
     a("")
     a("export type RegistroH2H = { a: number; b: number };")
     a("")
+    a("export type PartidoH2H = {")
+    a("  fecha: number; // yyyymmdd")
+    a("  torneo: string;")
+    a("  ronda: string;")
+    a("  superficie: string;")
+    a('  ganador: "a" | "b";')
+    a("  score: string;")
+    a("};")
+    a("")
     a("export type Rivalidad = {")
     a("  jugadorA: string; // id — el orden a/b de los registros corresponde a A/B")
     a("  jugadorB: string;")
@@ -85,6 +107,7 @@ def emitir_ts(rivalidades):
     a("  indoor: RegistroH2H;")
     a("  finales: RegistroH2H;")
     a("  grandSlams: RegistroH2H;")
+    a("  partidos: PartidoH2H[]; // orden cronológico")
     a("};")
     a("")
     a("export const rivalidades: Record<string, Rivalidad> = {")
@@ -96,6 +119,11 @@ def emitir_ts(rivalidades):
         for campo in ["total", "dura", "arcilla", "cesped", "indoor", "finales", "grandSlams"]:
             reg = r[campo]
             a(f'    {campo}: {{ a: {reg["a"]}, b: {reg["b"]} }},')
+        a("    partidos: [")
+        for pt in r["partidos"]:
+            score = pt["score"].replace('"', "'")
+            a(f'      {{ fecha: {pt["fecha"]}, torneo: "{pt["torneo"]}", ronda: "{pt["ronda"]}", superficie: "{pt["superficie"]}", ganador: "{pt["ganador"]}", score: "{score}" }},')
+        a("    ],")
         a("  },")
     a("};")
     a("")

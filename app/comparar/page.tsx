@@ -8,6 +8,7 @@ type Jugador = typeof jugadores[number];
 
 export default function CompararPage() {
   const [id1, setId1] = useState("djokovic");
+  const [verTodos, setVerTodos] = useState(false);
   const [id2, setId2] = useState("sinner");
 
   const j1 = jugadores.find((j) => j.id === id1)!;
@@ -20,6 +21,13 @@ export default function CompararPage() {
     if (!rivalidad) return { v1: 0, v2: 0 };
     const r = rivalidad[campo];
     return rivalidad.jugadorA === id1 ? { v1: r.a, v2: r.b } : { v1: r.b, v2: r.a };
+  };
+
+  const colorSuperficie: Record<string, string> = {
+    Hard: "bg-blue-400",
+    Clay: "bg-orange-400",
+    Grass: "bg-green-400",
+    Carpet: "bg-purple-400",
   };
 
   const desgloseH2H = [
@@ -171,6 +179,44 @@ export default function CompararPage() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Historial de partidos */}
+            <div className="mt-6 border-t border-zinc-800 pt-5">
+              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3 text-center">
+                Historial
+              </h3>
+              <div className="space-y-2">
+                {[...rivalidad.partidos]
+                  .reverse()
+                  .slice(0, verTodos ? undefined : 10)
+                  .map((p, i) => {
+                    const ganadorId = p.ganador === "a" ? rivalidad.jugadorA : rivalidad.jugadorB;
+                    const ganador = jugadores.find((j) => j.id === ganadorId)!;
+                    return (
+                      <div key={i} className="flex items-center justify-between text-sm py-1 border-b border-zinc-800/60 last:border-0">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-zinc-500 text-xs shrink-0">{String(p.fecha).slice(0, 4)}</span>
+                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${colorSuperficie[p.superficie] ?? "bg-zinc-600"}`}></div>
+                          <span className="text-zinc-300 truncate">{p.torneo}</span>
+                          <span className="text-zinc-600 text-xs shrink-0">{p.ronda}</span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 ml-3">
+                          <span className="font-semibold text-yellow-400 text-xs">{inicial(ganador.nombre)}</span>
+                          <span className="text-zinc-400 text-xs">{p.score}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              {rivalidad.partidos.length > 10 && (
+                <button
+                  onClick={() => setVerTodos(!verTodos)}
+                  className="mt-3 w-full text-center text-xs text-zinc-500 hover:text-yellow-400 transition-colors"
+                >
+                  {verTodos ? "Ver menos" : `Ver los ${rivalidad.partidos.length} partidos`}
+                </button>
+              )}
             </div>
 
             <p className="text-zinc-600 text-xs mt-5 text-center">
