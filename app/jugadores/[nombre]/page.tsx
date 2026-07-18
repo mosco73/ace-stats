@@ -1,4 +1,5 @@
 import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "../../data/jugadores";
+import { torneos } from "../../data/torneos";
 import { notFound } from "next/navigation";
 
 export default async function JugadorPage({
@@ -221,6 +222,38 @@ export default async function JugadorPage({
                     );
                 })}
             </div>
+
+            {(torneos[jugador.id] ?? []).length > 0 && (
+                <>
+                    <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4 mt-10">
+                        Torneos grandes
+                    </h2>
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-4">
+                        {torneos[jugador.id].map((t) => (
+                            <div key={t.torneo}>
+                                <div className="flex justify-between text-sm mb-1">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <span className={`text-xs shrink-0 ${t.categoria === "GS" ? "text-yellow-400" : "text-zinc-500"}`}>
+                                            {t.categoria === "GS" ? "GS" : "M1000"}
+                                        </span>
+                                        <span className="truncate">{t.torneo}</span>
+                                        {t.titulos > 0 && (
+                                            <span className="text-yellow-400 text-xs shrink-0">
+                                                🏆{t.titulos > 1 ? `×${t.titulos}` : ""}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <span className="font-semibold shrink-0">{t.pct.toFixed(1)}%</span>
+                                </div>
+                                <div className="w-full bg-zinc-800 rounded-full h-1.5">
+                                    <div className="bg-yellow-400 h-1.5 rounded-full" style={{ width: `${t.pct}%` }}></div>
+                                </div>
+                                <div className="text-xs text-zinc-500 mt-1">{t.victorias}V · {t.derrotas}D</div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
         </section>
         </main >
     );
