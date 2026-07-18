@@ -1,6 +1,6 @@
 # Ace Stats — Roadmap
 
-> Última actualización: 15/07/2026
+> Última actualización: 18/07/2026
 > Este documento vive en el repo para no depender de que una conversación
 > vieja con Claude no se pierda (ya nos pasó una vez con un script).
 
@@ -52,12 +52,17 @@ solo más cálculo sobre los datos que ya existen.
   superficie (`bg-${color}-400` no compila; mapa de clases completas).
 - [x] Nav con "← Volver" en Records; el Volver del perfil apunta al
   índice `/jugadores` (hub de exploración con 30 jugadores).
-- [ ] **Página `/metodologia`** — PRIORIDAD #1 post-roster: CLUTCH_RATING.md
-  traducido a lenguaje de usuario (qué mide, pesos, por qué desde 2000,
-  colores de confianza, historial de revisiones). La tarjeta del perfil y
-  el "¿Cómo se calcula?" de Records linkean ahí. La transparencia
-  metodológica es la credibilidad de la métrica.
-- [ ] Línea "vs. circuito ATP desde 2000" en la tarjeta Clutch del perfil.
+- [x] **Página `/metodologia`** (15/07) — la metodología en lenguaje de
+  usuario, linkeada desde la tarjeta Clutch del perfil y desde Records.
+  La transparencia como feature.
+- [x] Línea "vs. circuito ATP desde 2000" en la tarjeta Clutch del perfil.
+- [x] Comparador completado (16/07): las 4 superficies + Clutch Rating
+  al tope. Antes solo comparaba Indoor de las superficies.
+- [x] **Revisión de datos: Juegos Olímpicos incluidos (17/07)** en todo el
+  pipeline. Decisión de producto de Francisco al descubrir la exclusión
+  heredada. Detalle e impacto en CLUTCH_RATING.md (historial). Herramienta
+  nueva: `scripts/regenerar_todos.py` regenera jugadores.ts completo
+  preservando bios — usar en cada refresh de datos.
 - [ ] V·D junto al % en las tarjetas "vs Top 10 por superficie" (los 0.0%
   legítimos de muestra chica parecen bug sin contexto).
 - [ ] **Rendimiento por torneo (precalculado)**: 4 GS + Masters 1000 por
@@ -68,16 +73,22 @@ solo más cálculo sobre los datos que ya existen.
 - [ ] Court pace data (velocidad de superficie por torneo) — idea surgida
   del análisis del competidor Tennis Tour Data.
 
-## v1.8 — Rivalries (tratamiento aparte)
+## v1.8 — Rivalidades ✅ COMPLETA (18/07/2026)
 
-**Por qué está separado de v1.5:** no es "una estadística más" — es una
-**forma de dato distinta**. Las estadísticas de v1.0/v1.5 son por jugador
-individual; un head-to-head es por **par de jugadores**, lo que implica
-una estructura de datos nueva (no solo más campos en `jugadores.ts`).
+Integrada en el comparador (`/comparar`) en vez de páginas nuevas: la
+misma vista compara carrera + Clutch y cuenta la rivalidad.
 
-- [ ] Página dedicada por rivalidad (ej. Djokovic vs Nadal)
-- [ ] Head-to-head total, por superficie, en finales, en Grand Slams
-- [ ] Duración promedio de partidos, tiebreaks jugados entre ellos
+- [x] **Fase 1 — Frente a frente**: H2H total, por superficie, indoor,
+  en finales y en Grand Slams. 295 rivalidades de 435 pares, generadas
+  por `scripts/generar_rivalidades.py`. Números validados contra los
+  oficiales ATP (Djokovic-Nadal 31-29; sin walkovers, con JJOO).
+- [x] **Fase 2 — Timeline**: historial cronológico de cada rivalidad
+  (torneo, ronda, superficie, ganador, score), últimos 10 visibles +
+  expandir.
+- [ ] Insights automáticos: en la cola, solo con un enfoque que no sea
+  template barato (la timeline bien hecha ya ES el insight).
+- [ ] Cosmético: el dataset trae "Us Open"/"US Open" según el año —
+  normalizar nombres de torneos en el generador algún día.
 
 ## v2.0 — El motor: base de datos + preguntas en lenguaje natural
 
