@@ -1,6 +1,6 @@
 # Ace Stats — Roadmap
 
-> Última actualización: 18/07/2026
+> Última actualización: 18/07/2026 (2ª ed.)
 > Este documento vive en el repo para no depender de que una conversación
 > vieja con Claude no se pierda (ya nos pasó una vez con un script).
 
@@ -65,9 +65,16 @@ solo más cálculo sobre los datos que ya existen.
   preservando bios — usar en cada refresh de datos.
 - [ ] V·D junto al % en las tarjetas "vs Top 10 por superficie" (los 0.0%
   legítimos de muestra chica parecen bug sin contexto).
-- [ ] **Rendimiento por torneo (precalculado)**: 4 GS + Masters 1000 por
-  jugador. Se puede con el modelo actual (generador lo escupe); los
-  filtros temporales dinámicos NO — esos son v2.0.
+- [x] **Rendimiento por torneo (18/07)**: sección "Torneos grandes" en el
+  perfil — 4 GS + 9 Masters 1000 con V-D, % y títulos (🏆×14 de Nadal en
+  Roland Garros validado exacto contra el oficial). Generado por
+  `scripts/generar_torneos.py`. Con esto no queda nada precalculable:
+  los filtros temporales dinámicos son v2.0.
+- [x] Contexto narrativo en el Frente a frente (18/07): primera vez,
+  último partido y mayor racha, calculados en el cliente desde la
+  timeline. Auditoría de vs Top 10 completada: los 30 valores correctos
+  (anclajes élite exactos vs oficiales; solo 6 de 30 superan el 50% —
+  la realidad del tenis, no un bug).
 - [ ] Estadísticas adicionales: récord vs Top 20, récord por ronda, por
   temporada/década, % de sets y juegos ganados.
 - [ ] Court pace data (velocidad de superficie por torneo) — idea surgida
