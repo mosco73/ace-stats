@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { jugadores } from "../data/jugadores";
+import { rivalidades } from "../data/rivalidades";
 
 type Jugador = typeof jugadores[number];
 
@@ -11,6 +12,24 @@ export default function CompararPage() {
 
   const j1 = jugadores.find((j) => j.id === id1)!;
   const j2 = jugadores.find((j) => j.id === id2)!;
+
+  const claveRivalidad = [id1, id2].sort().join("-");
+  const rivalidad = id1 !== id2 ? rivalidades[claveRivalidad] : undefined;
+  // Orientar los registros a/b al orden elegido en pantalla (j1 izquierda, j2 derecha)
+  const reg = (campo: "total" | "dura" | "arcilla" | "cesped" | "indoor" | "finales" | "grandSlams") => {
+    if (!rivalidad) return { v1: 0, v2: 0 };
+    const r = rivalidad[campo];
+    return rivalidad.jugadorA === id1 ? { v1: r.a, v2: r.b } : { v1: r.b, v2: r.a };
+  };
+
+  const desgloseH2H = [
+    { label: "Dura", campo: "dura" as const, color: "bg-blue-400" },
+    { label: "Arcilla", campo: "arcilla" as const, color: "bg-orange-400" },
+    { label: "Césped", campo: "cesped" as const, color: "bg-green-400" },
+    { label: "Indoor", campo: "indoor" as const, color: "bg-purple-400" },
+    { label: "Finales", campo: "finales" as const, color: "bg-yellow-400" },
+    { label: "Grand Slams", campo: "grandSlams" as const, color: "bg-yellow-400" },
+  ];
 
   const filas: { label: string; valor: (j: Jugador) => number; sufijo: string }[] = [
     { label: "⭐ Clutch Rating", valor: (j) => j.clutchRating.total, sufijo: "" },
@@ -109,6 +128,61 @@ export default function CompararPage() {
             );
           })}
         </div>
+
+        {/* Frente a frente */}
+        {rivalidad ? (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6">
+            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5 text-center">
+              Frente a frente
+            </h2>
+            <div className="flex items-center justify-center gap-4 mb-1">
+              <span className={`text-4xl font-bold ${reg("total").v1 > reg("total").v2 ? "text-yellow-400" : ""}`}>
+                {reg("total").v1}
+              </span>
+              <span className="text-zinc-600 text-2xl">–</span>
+              <span className={`text-4xl font-bold ${reg("total").v2 > reg("total").v1 ? "text-yellow-400" : ""}`}>
+                {reg("total").v2}
+              </span>
+            </div>
+            <p className="text-center text-zinc-500 text-xs mb-6">
+              {reg("total").v1 + reg("total").v2} partidos
+            </p>
+
+            <div className="space-y-3">
+              {desgloseH2H.map((d) => {
+                const { v1, v2 } = reg(d.campo);
+                const total = v1 + v2;
+                return (
+                  <div key={d.label}>
+                    <div className="grid grid-cols-3 items-center text-sm mb-1">
+                      <div className={`text-left font-semibold ${total > 0 && v1 > v2 ? "text-yellow-400" : "text-zinc-300"}`}>{v1}</div>
+                      <div className="text-center text-zinc-500 text-xs">{d.label}</div>
+                      <div className={`text-right font-semibold ${total > 0 && v2 > v1 ? "text-yellow-400" : "text-zinc-300"}`}>{v2}</div>
+                    </div>
+                    <div className="flex h-1.5 rounded-full overflow-hidden bg-zinc-800">
+                      {total > 0 && (
+                        <>
+                          <div className={d.color} style={{ width: `${(v1 / total) * 100}%`, opacity: 0.9 }}></div>
+                          <div className="bg-zinc-950 w-px"></div>
+                          <div className={d.color} style={{ width: `${(v2 / total) * 100}%`, opacity: 0.45 }}></div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-zinc-600 text-xs mt-5 text-center">
+              Head-to-head oficial ATP · sin walkovers
+            </p>
+          </div>
+        ) : id1 !== id2 ? (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mt-6 text-center text-zinc-500 text-sm">
+            {j1.nombre.split(" ").pop()} y {j2.nombre.split(" ").pop()} nunca se
+            enfrentaron en el circuito ATP.
+          </div>
+        ) : null}
 
       </section>
     </main>
