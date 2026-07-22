@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import re
+import json
 
 HISTORICO_DIR = os.path.expanduser("~/Downloads/archive/tennis_atp")
 FRESCOS_DIR = os.path.expanduser("~/Desktop/ace-stats/datos-frescos")
@@ -62,17 +63,21 @@ def cargar_todo():
             df["fuente"] = "fresco"
             dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
+    df["anio"] = pd.to_numeric(df["tourney_date"], errors="coerce") // 10000
     print(f"Total: {len(df)} partidos\n")
     return df
 
 def safe_pct(n, d):
     return round(100*n/d, 1) if d else 0.0
 
-def calcular(nombre, df):
+def calcular(nombre, df, anio=None):
     mask = (df["winner_name"]==nombre)|(df["loser_name"]==nombre)
     p = df[mask].copy()
+    if anio is not None:
+        p = p[p["anio"]==anio]
     if len(p)==0:
-        print(f"No encontre partidos para {nombre}"); return
+        etiqueta = f"{nombre} en {anio}" if anio else nombre
+        print(f"No encontre partidos para {etiqueta}"); return
     p["gano"] = p["winner_name"]==nombre
     tb_g=tb_j=dec_g=dec_j=rem_op=rem_ex=0
     for _,r in p.iterrows():
@@ -126,7 +131,8 @@ def calcular(nombre, df):
     def pv(sub): 
         t=len(sub); v=int(sub["gano"].sum())
         return {"pct":round(100*v/t,1)if t else 0,"victorias":v,"derrotas":t-v}
-    print(f"\n{'='*50}\n{nombre} ({len(p)} partidos)\n{'='*50}")
+    titulo = f"{nombre} - Temporada {anio}" if anio else f"{nombre} (carrera)"
+    print(f"\n{'='*50}\n{titulo} ({len(p)} partidos)\n{'='*50}")
     print(f"tiebreaks:    {safe_pct(tb_g,tb_j)}")
     print(f"setDecisivo:  {safe_pct(dec_g,dec_j)}")
     print(f"remontadas:   {safe_pct(rem_ex,rem_op)}")
@@ -140,7 +146,18 @@ def calcular(nombre, df):
     print(f"[MUESTRA] bpSalvados: {bp_s}/{bp_f}")
     print(f"[MUESTRA] bpConvertidos: {bp_c}/{bp_rf}")
     print(f"[MUESTRA] remontadas: {rem_ex}/{rem_op}")
+    print(f"[MUESTRA] quintosSetGS: {int(gs5['gano'].sum())}/{len(gs5)}")
     print(f"finales:      {safe_pct(int(fin['gano'].sum()),len(fin))}")
+    if anio is not None:
+        victorias = int(p["gano"].sum())
+        derrotas = len(p) - victorias
+        titulos = int(fin["gano"].sum())
+        rank_propio = p.apply(lambda r: pd.to_numeric(r["winner_rank"] if r["gano"] else r["loser_rank"], errors="coerce"), axis=1)
+        mejor_ranking = int(rank_propio.min()) if rank_propio.notna().any() else None
+        print(f"\n--- Resumen temporada {anio} ---")
+        print(f"record:        {victorias}-{derrotas}")
+        print(f"titulos:       {titulos}")
+        print(f"mejor ranking: {mejor_ranking}")
     print(f"quintosSetGS: {safe_pct(int(gs5['gano'].sum()),len(gs5))}")
     print(f"bpSalvados:   {safe_pct(bp_s,bp_f)}")
     print(f"bpConvertidos:{safe_pct(bp_c,bp_rf)}")
@@ -151,8 +168,44 @@ def calcular(nombre, df):
     print(f"arcilla: {pv(p[p['surface']=='Clay'])}")
     print(f"cesped: {pv(p[p['surface']=='Grass'])}")
     print(f"indoor: {pv(p[p['es_indoor']])}")
+    if anio is not None:
+        resultado = {
+            "anio": anio,
+            "partidos_totales": len(p),
+            "victorias": victorias,
+            "derrotas": derrotas,
+            "titulos": titulos,
+            "mejor_ranking": mejor_ranking,
+            "stats_detalle": {
+                "tiebreaks": {"ganados": tb_g, "jugados": tb_j},
+                "set_decisivo": {"ganados": dec_g, "jugados": dec_j},
+                "remontadas": {"exitosas": rem_ex, "intentadas": rem_op},
+                "bp_salvados": {"salvados": int(bp_s), "enfrentados": int(bp_f)},
+                "bp_convertidos": {"convertidos": int(bp_c), "enfrentados": int(bp_rf)},
+                "saque_ganado": {"ganados": int(sv_t - sv_p), "total": int(sv_t)},
+                "devolucion_ganada": {"ganados": int(dv_g), "total": int(dv_t)},
+                "vs_top10": pv(vt10),
+                "vs_top10_dura": pv(vt10[vt10["surface"]=="Hard"]),
+                "vs_top10_arcilla": pv(vt10[vt10["surface"]=="Clay"]),
+                "vs_top10_cesped": pv(vt10[vt10["surface"]=="Grass"]),
+                "finales": pv(fin),
+                "quintos_set_gs": pv(gs5),
+                "masters1000": pv(mas),
+                "dura": pv(p[p["surface"]=="Hard"]),
+                "arcilla": pv(p[p["surface"]=="Clay"]),
+                "cesped": pv(p[p["surface"]=="Grass"]),
+                "indoor": pv(p[p["es_indoor"]]),
+            },
+        }
+        return resultado
 
 if __name__ == "__main__":
     df = cargar_todo()
     for nombre in PLAYERS:
         calcular(nombre, df)
+    # PILOTO temporada: validar antes de generalizar a todos los jugadores/años
+    resultado = calcular("Jannik Sinner", df, anio=2025)
+    if resultado:
+        resultado["jugador_id"] = "sinner"
+        print("\n--- JSON para Supabase (piloto) ---")
+        print(json.dumps(resultado, indent=2, ensure_ascii=False))

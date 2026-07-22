@@ -26,7 +26,12 @@ const { data: sinner, error: sinnerError } = await supabase
       .limit(5);
     partidosSinner = data ?? [];
   }
-
+const { data: statsTemporada, error: statsError } = await supabase
+    .from('stats_por_temporada')
+    .select('*')
+    .eq('jugador_id', 'sinner')
+    .eq('anio', 2025)
+    .single();
   return (
     <main className="min-h-screen bg-zinc-950 text-white p-8">
       <h1 className="text-2xl font-bold mb-4">Test de conexión Supabase</h1>
@@ -44,6 +49,13 @@ const { data: sinner, error: sinnerError } = await supabase
       <h2 className="text-xl font-semibold mt-6 mb-2">Últimos 5 partidos de Sinner</h2>
       <pre className="bg-zinc-900 p-4 rounded-lg overflow-x-auto text-xs">
         {JSON.stringify(partidosSinner, null, 2)}
+      </pre>
+       <h2 className="text-xl font-semibold mt-6 mb-2">Stats temporada 2025 (Sinner)</h2>
+      {statsError && (
+        <p className="text-red-400 mb-4">Error: {statsError.message}</p>
+      )}
+      <pre className="bg-zinc-900 p-4 rounded-lg overflow-x-auto text-xs">
+        {JSON.stringify(statsTemporada, null, 2)}
       </pre>
     </main>
   );
