@@ -210,6 +210,22 @@ export default async function JugadorPage({
       </div> 
                 )}
       
+                {statsTemporada && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                            <div className="text-xs text-zinc-500 mb-1">Récord</div>
+                            <div className="text-2xl font-bold">{statsTemporada.victorias}-{statsTemporada.derrotas}</div>
+                        </div>
+                        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                            <div className="text-xs text-zinc-500 mb-1">Títulos</div>
+                            <div className="text-2xl font-bold">{statsTemporada.titulos}</div>
+                        </div>
+                        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                            <div className="text-xs text-zinc-500 mb-1">Mejor ranking</div>
+                            <div className="text-2xl font-bold">{statsTemporada.mejor_ranking ?? "—"}</div>
+                        </div>
+                    </div>
+                )}
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                 Rendimiento por superficie
             </h2>
