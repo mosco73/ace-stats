@@ -2,6 +2,26 @@ import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "..
 import { supabase } from "../../lib/supabase";
 import { torneos } from "../../data/torneos";
 import { notFound } from "next/navigation";
+const MUESTRA_MINIMA = 10;
+
+function ValorTarjeta({ pct, muestra, ganados, sufijo, color = "", size = "text-2xl" }: { pct: number; muestra: number | null; ganados: number | null; sufijo: string; color?: string; size?: string }) {
+    if (muestra !== null && muestra < MUESTRA_MINIMA) {
+        return (
+            <>
+                <div className="text-[15px] font-semibold text-zinc-400">
+                    {pct.toFixed(1)}% <span className="text-zinc-500 font-normal">· {ganados} de {muestra}</span>
+                </div>
+                <div className="text-xs text-zinc-500 mt-1">Muestra limitada</div>
+            </>
+        );
+    }
+    return (
+        <>
+            <div className={`${size} font-bold ${color}`}>{pct.toFixed(1)}%</div>
+            {sufijo && <div className="text-xs text-zinc-500 mt-1">{sufijo}</div>}
+        </>
+    );
+}
 
 export default async function JugadorPage({
     params,
@@ -50,6 +70,22 @@ export default async function JugadorPage({
     const bpConvertidosPct = stats ? pct(stats.bp_convertidos.convertidos, stats.bp_convertidos.enfrentados) : jugador.stats.bpConvertidos;
     const svGanadosPct = stats ? pct(stats.saque_ganado.ganados, stats.saque_ganado.total) : jugador.stats.svGanados;
     const devGanadosPct = stats ? pct(stats.devolucion_ganada.ganados, stats.devolucion_ganada.total) : jugador.stats.devGanados;
+    const etiquetaPeriodo = statsTemporada ? `Temporada ${statsTemporada.anio}` : "Carrera completa";
+    const vsTop10Dura = stats ? (stats.vs_top10_dura?.pct ?? 0) : jugador.superficie.vsTop10PorSuperficie.dura;
+    const vsTop10Arcilla = stats ? (stats.vs_top10_arcilla?.pct ?? 0) : jugador.superficie.vsTop10PorSuperficie.arcilla;
+    const vsTop10Cesped = stats ? (stats.vs_top10_cesped?.pct ?? 0) : jugador.superficie.vsTop10PorSuperficie.cesped;
+    const vd = (o: { victorias?: number; derrotas?: number } | undefined) => o ? (o.victorias ?? 0) + (o.derrotas ?? 0) : 0;
+
+    const muestraTiebreaks = stats ? stats.tiebreaks.jugados : null;
+    const muestraSetDecisivo = stats ? stats.set_decisivo.jugados : null;
+    const muestraRemontadas = stats ? stats.remontadas.intentadas : null;
+    const muestraVsTop10 = stats ? vd(stats.vs_top10) : null;
+    const muestraFinales = stats ? vd(stats.finales) : null;
+    const muestraQuintosSetGS = stats ? vd(stats.quintos_set_gs) : null;
+    const muestraMasters1000 = stats ? vd(stats.masters1000) : null;
+    const muestraVsTop10Dura = stats ? vd(stats.vs_top10_dura) : null;
+    const muestraVsTop10Arcilla = stats ? vd(stats.vs_top10_arcilla) : null;
+    const muestraVsTop10Cesped = stats ? vd(stats.vs_top10_cesped) : null;
 
     return (
         <main className="min-h-screen bg-zinc-950 text-white">
@@ -84,11 +120,11 @@ export default async function JugadorPage({
                 </div>
                 {anios.length > 0 && (
                     <div className="flex gap-2 mb-8 overflow-x-auto">
-                        <a href={`/jugadores/${jugador.id}`} className="text-sm px-4 py-2 rounded-full bg-yellow-400 text-zinc-950 font-semibold whitespace-nowrap">
+                        <a href={`/jugadores/${jugador.id}`} className={`text-sm px-4 py-2 rounded-full whitespace-nowrap ${!statsTemporada ? "bg-yellow-400 text-zinc-950 font-semibold" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}>
                             Carrera
                         </a>
                         {anios.map((a) => (
-                            <a key={a} href={`/jugadores/${jugador.id}?year=${a}`} className="text-sm px-4 py-2 rounded-full bg-zinc-800 text-zinc-300 hover:bg-zinc-700 whitespace-nowrap">
+                            <a key={a} href={`/jugadores/${jugador.id}?year=${a}`} className={`text-sm px-4 py-2 rounded-full whitespace-nowrap ${statsTemporada?.anio === a ? "bg-yellow-400 text-zinc-950 font-semibold" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}>
                                 {a}
                             </a>
                         ))}
@@ -185,57 +221,51 @@ export default async function JugadorPage({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Tie-breaks ganados</div>
-                        <div className="text-2xl font-bold">{jugador.stats.tiebreaks.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                        <ValorTarjeta pct={tiebreaksPct} muestra={muestraTiebreaks} ganados={stats ? stats.tiebreaks.ganados : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Set decisivo</div>
-                        <div className="text-2xl font-bold">{jugador.stats.setDecisivo.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Histórico ATP</div>
+                        <ValorTarjeta pct={setDecisivoPct} muestra={muestraSetDecisivo} ganados={stats ? stats.set_decisivo.ganados : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Remontadas</div>
-                        <div className="text-2xl font-bold">{jugador.stats.remontadas.toFixed(1)}%</div>
+                        <ValorTarjeta pct={remontadasPct} muestra={muestraRemontadas} ganados={stats ? stats.remontadas.exitosas : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">vs Top 10</div>
-                        <div className="text-2xl font-bold">{jugador.stats.vsTop10.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                        <ValorTarjeta pct={vsTop10Pct} muestra={muestraVsTop10} ganados={stats ? stats.vs_top10.victorias : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Conversión finales</div>
-                        <div className="text-2xl font-bold">{jugador.stats.finales.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                        <ValorTarjeta pct={finalesPct} muestra={muestraFinales} ganados={stats ? stats.finales.victorias : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">5to set en Grand Slams</div>
-                        <div className="text-2xl font-bold">{jugador.stats.quintosSetGS.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Histórico</div>
+                        <ValorTarjeta pct={quintosSetGSPct} muestra={muestraQuintosSetGS} ganados={stats ? stats.quintos_set_gs.victorias : null} sufijo={etiquetaPeriodo} />
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                         <div className="text-xs text-zinc-500 mb-1">Masters 1000</div>
-                        <div className="text-2xl font-bold">{jugador.stats.masters1000.pct.toFixed(1)}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">{jugador.stats.masters1000.victorias}V · {jugador.stats.masters1000.derrotas}D</div>
+                        <ValorTarjeta pct={masters1000.pct} muestra={muestraMasters1000} ganados={masters1000.victorias} sufijo={`${masters1000.victorias}V · ${masters1000.derrotas}D`} />
                     </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Break points salvados</div>
-                    <div className="text-2xl font-bold">{jugador.stats.bpSalvados.toFixed(1)}%</div>
-                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    <div className="text-2xl font-bold">{bpSalvadosPct.toFixed(1)}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">{etiquetaPeriodo}</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Break points convertidos</div>
-                    <div className="text-2xl font-bold">{jugador.stats.bpConvertidos.toFixed(1)}%</div>
-                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    <div className="text-2xl font-bold">{bpConvertidosPct.toFixed(1)}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">{etiquetaPeriodo}</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Juegos de saque ganados</div>
-                    <div className="text-2xl font-bold">{jugador.stats.svGanados.toFixed(1)}%</div>
-                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    <div className="text-2xl font-bold">{svGanadosPct.toFixed(1)}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">{etiquetaPeriodo}</div>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                     <div className="text-xs text-zinc-500 mb-1">Juegos de devolución ganados</div>
-                    <div className="text-2xl font-bold">{jugador.stats.devGanados.toFixed(1)}%</div>
-                    <div className="text-xs text-zinc-500 mt-1">Carrera completa</div>
+                    <div className="text-2xl font-bold">{devGanadosPct.toFixed(1)}%</div>
+                    <div className="text-xs text-zinc-500 mt-1">{etiquetaPeriodo}</div>
                 </div>
             </div>
 
@@ -245,15 +275,15 @@ export default async function JugadorPage({
             <div className="grid grid-cols-3 gap-4 mb-8">
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Dura</div>
-                    <div className="text-xl font-bold text-blue-400">{jugador.superficie.vsTop10PorSuperficie.dura.toFixed(1)}%</div>
+                    <ValorTarjeta pct={vsTop10Dura} muestra={muestraVsTop10Dura} ganados={stats ? stats.vs_top10_dura?.victorias ?? 0 : null} sufijo="" color="text-blue-400" size="text-xl" />
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Arcilla</div>
-                    <div className="text-xl font-bold text-orange-400">{jugador.superficie.vsTop10PorSuperficie.arcilla.toFixed(1)}%</div>
+                    <ValorTarjeta pct={vsTop10Arcilla} muestra={muestraVsTop10Arcilla} ganados={stats ? stats.vs_top10_arcilla?.victorias ?? 0 : null} sufijo="" color="text-orange-400" size="text-xl" />
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-center">
                     <div className="text-xs text-zinc-500 mb-1">Césped</div>
-                    <div className="text-xl font-bold text-green-400">{jugador.superficie.vsTop10PorSuperficie.cesped.toFixed(1)}%</div>
+                    <ValorTarjeta pct={vsTop10Cesped} muestra={muestraVsTop10Cesped} ganados={stats ? stats.vs_top10_cesped?.victorias ?? 0 : null} sufijo="" color="text-green-400" size="text-xl" />
                 </div>
             </div>
 
@@ -264,7 +294,7 @@ export default async function JugadorPage({
                 {(["dura", "arcilla", "cesped", "indoor"] as const).map((sup) => {
                    const colores = { dura: "bg-blue-400", arcilla: "bg-orange-400", cesped: "bg-green-400", indoor: "bg-purple-400" };
                     const nombres = { dura: "Dura", arcilla: "Arcilla", cesped: "Césped", indoor: "Indoor" };
-                    const d = jugador.superficie[sup];
+                    const d = (stats ? stats[sup] : jugador.superficie[sup]) ?? { pct: 0, victorias: 0, derrotas: 0 };
                     const color = colores[sup];
                     return (
                         <div key={sup}>
@@ -284,7 +314,7 @@ export default async function JugadorPage({
                 })}
             </div>
 
-            {(torneos[jugador.id] ?? []).length > 0 && (
+            {!statsTemporada && (torneos[jugador.id] ?? []).length > 0 && (
                 <>
                     <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4 mt-10">
                         Torneos grandes
