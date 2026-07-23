@@ -211,6 +211,32 @@ export default async function JugadorPage({
                 )}
       
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+                Rendimiento por superficie
+            </h2>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
+                {(["dura", "arcilla", "cesped", "indoor"] as const).map((sup) => {
+                   const colores = { dura: "bg-blue-400", arcilla: "bg-orange-400", cesped: "bg-green-400", indoor: "bg-purple-400" };
+                    const nombres = { dura: "Dura", arcilla: "Arcilla", cesped: "Césped", indoor: "Indoor" };
+                    const d = (stats ? stats[sup] : jugador.superficie[sup]) ?? { pct: 0, victorias: 0, derrotas: 0 };
+                    const color = colores[sup];
+                    return (
+                        <div key={sup}>
+                            <div className="flex justify-between text-sm mb-2">
+                                <div className="flex items-center gap-2">
+                                   <div className={`w-2 h-2 rounded-full ${color}`}></div>
+                                    <span>{nombres[sup]}</span>
+                                </div>
+                                <span className="font-semibold">{d.pct.toFixed(1)}%</span>
+                            </div>
+                            <div className="w-full bg-zinc-800 rounded-full h-2">
+                               <div className={`${color} h-2 rounded-full`} style={{ width: `${d.pct}%` }}></div>
+                            </div>
+                            <div className="text-xs text-zinc-500 mt-1">{d.victorias}V · {d.derrotas}D</div>
+                        </div>
+                    );
+                })}
+            </div>
+            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                     Estadísticas avanzadas
                 </h2>
                 {!statsTemporada && jugador.ranking !== -1 && (
@@ -287,32 +313,7 @@ export default async function JugadorPage({
                 </div>
             </div>
 
-            <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
-                Rendimiento por superficie
-            </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
-                {(["dura", "arcilla", "cesped", "indoor"] as const).map((sup) => {
-                   const colores = { dura: "bg-blue-400", arcilla: "bg-orange-400", cesped: "bg-green-400", indoor: "bg-purple-400" };
-                    const nombres = { dura: "Dura", arcilla: "Arcilla", cesped: "Césped", indoor: "Indoor" };
-                    const d = (stats ? stats[sup] : jugador.superficie[sup]) ?? { pct: 0, victorias: 0, derrotas: 0 };
-                    const color = colores[sup];
-                    return (
-                        <div key={sup}>
-                            <div className="flex justify-between text-sm mb-2">
-                                <div className="flex items-center gap-2">
-                                   <div className={`w-2 h-2 rounded-full ${color}`}></div>
-                                    <span>{nombres[sup]}</span>
-                                </div>
-                                <span className="font-semibold">{d.pct.toFixed(1)}%</span>
-                            </div>
-                            <div className="w-full bg-zinc-800 rounded-full h-2">
-                               <div className={`${color} h-2 rounded-full`} style={{ width: `${d.pct}%` }}></div>
-                            </div>
-                            <div className="text-xs text-zinc-500 mt-1">{d.victorias}V · {d.derrotas}D</div>
-                        </div>
-                    );
-                })}
-            </div>
+            
 
             {!statsTemporada && (torneos[jugador.id] ?? []).length > 0 && (
                 <>
