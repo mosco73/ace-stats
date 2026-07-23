@@ -1,18 +1,55 @@
 import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "../../data/jugadores";
+import { supabase } from "../../lib/supabase";
 import { torneos } from "../../data/torneos";
 import { notFound } from "next/navigation";
 
 export default async function JugadorPage({
     params,
+    searchParams,
 }: {
     params: Promise<{ nombre: string }>;
+    searchParams: Promise<{ year?: string }>;
 }) {
     const { nombre } = await params;
+    const { year } = await searchParams;
+    const anioSeleccionado = year ? parseInt(year, 10) : null;
     const jugador = jugadores.find((j) => j.id === nombre);
 
     if (!jugador) {
         notFound();
     }
+
+    const { data: temporadas } = await supabase
+        .from("stats_por_temporada")
+        .select("anio")
+        .eq("jugador_id", nombre)
+        .order("anio", { ascending: false });
+
+    const anios = (temporadas ?? []).map((t) => t.anio);
+    let statsTemporada = null;
+    if (anioSeleccionado && anios.includes(anioSeleccionado)) {
+        const { data } = await supabase
+            .from("stats_por_temporada")
+            .select("*")
+            .eq("jugador_id", nombre)
+            .eq("anio", anioSeleccionado)
+            .single();
+        statsTemporada = data;
+    }
+    const stats = statsTemporada ? statsTemporada.stats_detalle : null;
+    const pct = (num: number, den: number) => (den ? (100 * num) / den : 0);
+
+    const tiebreaksPct = stats ? pct(stats.tiebreaks.ganados, stats.tiebreaks.jugados) : jugador.stats.tiebreaks;
+    const setDecisivoPct = stats ? pct(stats.set_decisivo.ganados, stats.set_decisivo.jugados) : jugador.stats.setDecisivo;
+    const remontadasPct = stats ? pct(stats.remontadas.exitosas, stats.remontadas.intentadas) : jugador.stats.remontadas;
+    const vsTop10Pct = stats ? stats.vs_top10.pct : jugador.stats.vsTop10;
+    const finalesPct = stats ? stats.finales.pct : jugador.stats.finales;
+    const quintosSetGSPct = stats ? stats.quintos_set_gs.pct : jugador.stats.quintosSetGS;
+    const masters1000 = stats ? stats.masters1000 : jugador.stats.masters1000;
+    const bpSalvadosPct = stats ? pct(stats.bp_salvados.salvados, stats.bp_salvados.enfrentados) : jugador.stats.bpSalvados;
+    const bpConvertidosPct = stats ? pct(stats.bp_convertidos.convertidos, stats.bp_convertidos.enfrentados) : jugador.stats.bpConvertidos;
+    const svGanadosPct = stats ? pct(stats.saque_ganado.ganados, stats.saque_ganado.total) : jugador.stats.svGanados;
+    const devGanadosPct = stats ? pct(stats.devolucion_ganada.ganados, stats.devolucion_ganada.total) : jugador.stats.devGanados;
 
     return (
         <main className="min-h-screen bg-zinc-950 text-white">
@@ -45,8 +82,30 @@ export default async function JugadorPage({
                         </div>
                     </div>
                 </div>
+                {anios.length > 0 && (
+                    <div className="flex gap-2 mb-8 overflow-x-auto">
+                        <a href={`/jugadores/${jugador.id}`} className="text-sm px-4 py-2 rounded-full bg-yellow-400 text-zinc-950 font-semibold whitespace-nowrap">
+                            Carrera
+                        </a>
+                        {anios.map((a) => (
+                            <a key={a} href={`/jugadores/${jugador.id}?year=${a}`} className="text-sm px-4 py-2 rounded-full bg-zinc-800 text-zinc-300 hover:bg-zinc-700 whitespace-nowrap">
+                                {a}
+                            </a>
+                        ))}
+                    </div>
+                )}
+                {statsTemporada && (
+                    <div className="mb-6">
+                        <p className="text-lg font-semibold text-white">
+                            Temporada {statsTemporada.anio} · {statsTemporada.partidos_totales} partidos
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1">
+                            Datos actualizados al {new Date(statsTemporada.actualizado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}
+                        </p>
+                    </div>
+                )}
 
-                <div className="bg-zinc-900 border-2 border-yellow-400/40 rounded-2xl p-6 mb-8">
+                {!statsTemporada && (<div className="bg-zinc-900 border-2 border-yellow-400/40 rounded-2xl p-6 mb-8">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-yellow-400">⭐</span>
           <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">
@@ -112,11 +171,13 @@ export default async function JugadorPage({
             </span>
           </div>
         </div>
-      </div>
+      </div> 
+                )}
+      
                 <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                     Estadísticas avanzadas
                 </h2>
-                {jugador.ranking !== -1 && (
+                {!statsTemporada && jugador.ranking !== -1 && (
     <p className="text-xs text-zinc-500 mb-4">
         Datos actualizados al {DATOS_ACTUALIZADOS_AL}
     </p>

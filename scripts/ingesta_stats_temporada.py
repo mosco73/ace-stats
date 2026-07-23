@@ -21,7 +21,9 @@ from ingesta_supabase import pedir_conexion
 
 # Piloto: (jugador_id en la tabla jugadores, nombre tal cual en el dataset, anio)
 OBJETIVOS = [
+    ("sinner", "Jannik Sinner", 2024),
     ("sinner", "Jannik Sinner", 2025),
+    ("sinner", "Jannik Sinner", 2026),
 ]
 
 SQL = """
