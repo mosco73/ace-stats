@@ -63,6 +63,23 @@ def cargar_todo():
             df["fuente"] = "fresco"
             dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
+    # Los CSV historicos y los frescos escriben distinto las particulas del
+    # apellido ("Alex De Minaur" vs "Alex de Minaur"), lo que partia la carrera
+    # de esos jugadores en dos y hacia que se perdieran partidos. Unificamos
+    # cada grupo a la variante mas frecuente (gana la historica, que tiene mas
+    # partidos, y es la que usan nombre_dataset y NOMBRES_DATASET).
+    conteo = pd.concat([df["winner_name"], df["loser_name"]]).dropna().value_counts()
+    canonico = {}
+    for nombre in conteo.index:
+        k = nombre.lower()
+        if k not in canonico:
+            canonico[k] = nombre
+    mapa = {n: canonico[n.lower()] for n in conteo.index}
+    unificados = sum(1 for n, c in mapa.items() if n != c)
+    if unificados:
+        print(f"Nombres unificados: {unificados}")
+    df["winner_name"] = df["winner_name"].map(mapa).fillna(df["winner_name"])
+    df["loser_name"] = df["loser_name"].map(mapa).fillna(df["loser_name"])
     df["anio"] = pd.to_numeric(df["tourney_date"], errors="coerce") // 10000
     print(f"Total: {len(df)} partidos\n")
     return df

@@ -19,12 +19,16 @@ from psycopg2.extras import Json
 from calcular_stats import cargar_todo, calcular
 from ingesta_supabase import pedir_conexion
 
-# Piloto: (jugador_id en la tabla jugadores, nombre tal cual en el dataset, anio)
-OBJETIVOS = [
-    ("sinner", "Jannik Sinner", 2024),
-    ("sinner", "Jannik Sinner", 2025),
-    ("sinner", "Jannik Sinner", 2026),
-]
+def anios_de(nombre_dataset, df):
+    """Devuelve la lista de años en que el jugador aparece en el dataset."""
+    en_partidos = df[(df["winner_name"] == nombre_dataset) | (df["loser_name"] == nombre_dataset)]
+    return sorted(en_partidos["anio"].unique().tolist())
+
+
+def obtener_jugadores(cur):
+    """Trae todos los jugadores de Supabase: (id, nombre_dataset)."""
+    cur.execute("select id, nombre_dataset from jugadores order by id")
+    return cur.fetchall()
 
 SQL = """
 insert into stats_por_temporada
@@ -50,6 +54,8 @@ if __name__ == "__main__":
     print("Conectado ✓\n")
 
     df = cargar_todo()
+    jugadores = obtener_jugadores(cur)
+    OBJETIVOS = [(jid, nombre, anio) for jid, nombre in jugadores for anio in anios_de(nombre, df)]
 
     for jugador_id, nombre_dataset, anio in OBJETIVOS:
         r = calcular(nombre_dataset, df, anio=anio)
