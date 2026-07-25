@@ -2,6 +2,7 @@ import { jugadores, CLUTCH_RATING_PROMEDIO_ATP, DATOS_ACTUALIZADOS_AL } from "..
 import { supabase } from "../../lib/supabase";
 import { torneos } from "../../data/torneos";
 import { notFound } from "next/navigation";
+import SelectorAnios from "../../components/SelectorAnios";
 const MUESTRA_MINIMA = 10;
 
 function ValorTarjeta({ pct, muestra, ganados, sufijo, color = "", size = "text-2xl" }: { pct: number; muestra: number | null; ganados: number | null; sufijo: string; color?: string; size?: string }) {
@@ -119,17 +120,8 @@ export default async function JugadorPage({
                     </div>
                 </div>
                 {anios.length > 0 && (
-                    <div className="flex gap-2 mb-8 overflow-x-auto">
-                        <a href={`/jugadores/${jugador.id}`} className={`text-sm px-4 py-2 rounded-full whitespace-nowrap ${!statsTemporada ? "bg-yellow-400 text-zinc-950 font-semibold" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}>
-                            Carrera
-                        </a>
-                        {anios.map((a) => (
-                            <a key={a} href={`/jugadores/${jugador.id}?year=${a}`} className={`text-sm px-4 py-2 rounded-full whitespace-nowrap ${statsTemporada?.anio === a ? "bg-yellow-400 text-zinc-950 font-semibold" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}>
-                                {a}
-                            </a>
-                        ))}
-                    </div>
-                )}
+    <SelectorAnios jugadorId={jugador.id} anios={anios} anioActivo={statsTemporada ? statsTemporada.anio : null} />
+)}
                 {statsTemporada && (
                     <div className="mb-6">
                         <p className="text-lg font-semibold text-white">
