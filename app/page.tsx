@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { jugadores } from "./data/jugadores";
-import TestCliente from "./components/TestCliente";
 
 const destacados = jugadores.filter(j => 
   ["sinner", "djokovic", "alcaraz", "medvedev"].includes(j.id)
