@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
 """
-actualizar.py - Paso 1 del pipeline de actualizacion (Ace Stats).
+actualizar.py - Pipeline de actualizacion de Ace Stats en un solo comando.
 
-Baja los CSV frescos de TennisMyLife y VERIFICA que esten al dia antes de
-dejarlos en datos-frescos/. No toca la base de datos ni jugadores.ts.
+    bajar CSV frescos  ->  VERIFICAR que esten al dia  ->  ingestar a Supabase
+
+La verificacion es fail-closed: si los datos parecen incompletos, aborta y NO
+ingiere. Preferimos no actualizar antes que meter una temporada a medias.
 
 Uso:
-    python3 scripts/actualizar.py                   # baja y verifica
-    python3 scripts/actualizar.py --solo-verificar  # no baja, verifica lo que hay
+    python3 scripts/actualizar.py                   # baja, verifica y (si confirmas) ingiere
+    python3 scripts/actualizar.py --solo-verificar  # no baja ni ingiere, solo mira lo que hay
+    python3 scripts/actualizar.py --sin-ingesta     # baja y verifica, no toca la DB
+    python3 scripts/actualizar.py --auto            # sin preguntas, para cron
     python3 scripts/actualizar.py --anios 2026      # solo un anio
 
 Sale con codigo 1 si algun chequeo DURO falla. En ese caso el CSV viejo NO se
 pisa: la descarga queda en un .tmp al lado, para poder mirarla a mano.
+
+La ingesta usa el MISMO df que se verifico (via calcular_stats.cargar_todo()
+sobre los archivos recien validados). Entre verificar e ingerir no se baja
+nada, asi el guardian custodia exactamente lo que entra a la base.
+
+Para correr sin humano adelante (--auto) hace falta la conexion en el
+environment, porque pedir_conexion() es interactivo:
+    export ACE_STATS_DSN='postgresql://...'
 """
 import argparse
 import json
@@ -185,15 +197,78 @@ def resumen(anio, df):
     return f"{len(df)} partidos - ultimo: {ultima.strftime('%d/%m/%Y')} ({torneo})"
 
 
+# --- Ingesta ----------------------------------------------------------------
+
+def correr_ingesta():
+    """
+    Carga el dataset completo y lo ingiere a Supabase.
+
+    Los imports son perezosos a proposito: asi --solo-verificar y --sin-ingesta
+    funcionan aunque psycopg2 no este instalado o la DB este caida.
+
+    Devuelve 0 si salio bien, 1 si fallo (para que main() haga exit con eso).
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import psycopg2
+        from calcular_stats import cargar_todo
+        from ingesta_stats_temporada import ingestar
+        from ingesta_supabase import pedir_conexion
+    except ImportError as e:
+        print(f"ERROR: no pude importar lo necesario para ingerir: {e}")
+        return 1
+
+    dsn = os.environ.get("ACE_STATS_DSN")
+    if not dsn:
+        dsn = pedir_conexion()
+
+    print("\nConectando a Supabase...")
+    conn = None
+    try:
+        conn = psycopg2.connect(dsn)
+        conn.autocommit = False
+        cur = conn.cursor()
+        print("Conectado ✓\n")
+
+        # Lee los MISMOS archivos que se acaban de verificar.
+        df = cargar_todo()
+        insertadas = ingestar(df, cur)
+
+        conn.commit()
+        print(f"\n{'='*60}")
+        print(f"INGESTA OK: {insertadas} filas de stats_por_temporada actualizadas.")
+        print(f"{'='*60}\n")
+        return 0
+    except Exception as e:
+        if conn is not None:
+            conn.rollback()
+        print(f"\n{'='*60}")
+        print(f"INGESTA FALLIDA: {e}")
+        print("Se hizo rollback: la base quedo como estaba.")
+        print(f"{'='*60}\n")
+        return 1
+    finally:
+        if conn is not None:
+            conn.close()
+
+
 # --- Main -------------------------------------------------------------------
 
 def main():
-    ap = argparse.ArgumentParser(description="Baja y verifica los CSV frescos de TML.")
+    ap = argparse.ArgumentParser(
+        description="Baja los CSV frescos de TML, verifica que esten al dia e ingiere a Supabase.")
     ap.add_argument("--solo-verificar", action="store_true",
-                    help="no baja nada, verifica los CSV que ya estan en datos-frescos/")
+                    help="no baja nada ni ingiere, solo verifica los CSV que ya estan")
+    ap.add_argument("--sin-ingesta", action="store_true",
+                    help="baja y verifica, pero no toca la base de datos")
+    ap.add_argument("--auto", action="store_true",
+                    help="no pregunta nada (para cron); necesita ACE_STATS_DSN seteada")
     ap.add_argument("--anios", nargs="+", type=int, default=ANIOS_DEFAULT,
                     help=f"anios a procesar (default: {' '.join(map(str, ANIOS_DEFAULT))})")
     args = ap.parse_args()
+
+    # --solo-verificar es un modo de mirar, nunca escribe en ningun lado.
+    ingesta_pedida = not (args.solo_verificar or args.sin_ingesta)
 
     hoy = date.today()
     os.makedirs(DESTINO, exist_ok=True)
@@ -204,9 +279,17 @@ def main():
         estado_viejo = {}
     estado_nuevo = dict(estado_viejo)
 
+    if args.solo_verificar:
+        modo = "  [SOLO VERIFICAR]"
+    elif args.sin_ingesta:
+        modo = "  [SIN INGESTA]"
+    elif args.auto:
+        modo = "  [AUTO]"
+    else:
+        modo = ""
+
     print(f"\n{'='*60}")
-    print(f"Actualizar datos frescos - {hoy.strftime('%d/%m/%Y')}"
-          f"{'  [SOLO VERIFICAR]' if args.solo_verificar else ''}")
+    print(f"Actualizar datos frescos - {hoy.strftime('%d/%m/%Y')}{modo}")
     print(f"{'='*60}")
 
     hubo_error = False
@@ -288,6 +371,20 @@ def main():
     else:
         print("RESULTADO: OK. Datos frescos y completos.")
     print(f"{'='*60}\n")
+
+    if not ingesta_pedida:
+        motivo = "--solo-verificar" if args.solo_verificar else "--sin-ingesta"
+        print(f"No ingiero: corriste con {motivo}.\n")
+        return
+
+    # Solo llegamos aca si TODOS los chequeos duros pasaron.
+    if not args.auto:
+        r = input("Ingerir estos datos a Supabase? [s/N]: ").strip().lower()
+        if r not in ("s", "si", "sí"):
+            print("Cancelado. Los CSV quedaron actualizados igual.\n")
+            return
+
+    sys.exit(correr_ingesta())
 
 
 if __name__ == "__main__":
