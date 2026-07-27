@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 datos-frescos/
 scripts/distribucion_historica.csv
+# Capturas de pantalla
+Captura de Pantalla*.png
+Screenshot*.png
