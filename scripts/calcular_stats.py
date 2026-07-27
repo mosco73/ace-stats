@@ -31,6 +31,12 @@ def es_indoor(row):
     # Cubre casos como "Paris Indoor" que la lista de nombres no agarraba.
     if "indoor" in nombre:
         return True
+    # La superficie Carpet era portatil y se instalaba adentro de estadios:
+    # practicamente todo el Carpet historico fue bajo techo (Wembley, WCT,
+    # Philadelphia, San Francisco). Lo tomamos como senal de indoor. Es
+    # inferencia, no dato duro -- documentado en /metodologia.
+    if str(row.get("surface", "")).strip().lower() == "carpet":
+        return True
     return any(t in nombre for t in TORNEOS_INDOOR)
 
 def es_set_completo(w, l):
