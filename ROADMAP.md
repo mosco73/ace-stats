@@ -113,6 +113,23 @@ cálculo en el servidor. No se puede hacer con un `.ts` editado a mano.
   o ambas.
 - [ ] Contenido dinámico derivado ("los más clutch de esta temporada") —
   insumo directo para el canal de contenido
+### Juego: quiz de tenis (post-v2.0)
+
+Preguntas generadas por plantilla contra Supabase sobre los 199k partidos
+→ banco infinito, costo de contenido ~0. Es una pieza de adquisición, no
+una feature del producto.
+
+- Vive dentro de Ace Stats (/juegos/...), no en dominio aparte: el tráfico
+  tiene que quedar en el sitio y el SEO acumular en un solo lugar.
+- El resultado compartible debe ser una IDENTIDAD, no un puntaje.
+  "Sos nivel Tennis Abstract" / "Especialista en polvo de ladrillo".
+  Un 8/10 no se comparte; un diagnóstico sí.
+- Técnico: generar el banco como JSON estático en build time. Nunca
+  consultas a Supabase en runtime — el plan free no aguanta un pico viral.
+
+Descartado: simulador de carrera tipo Copero. No usa el activo (los datos),
+el costo real es escribir cientos de eventos a mano, y la ola ya está en pico.
+Posible v2: simulador anclado en distribuciones reales del dataset.
 
 ## v3.0 — Comunidad (estilo Letterboxd)
 
