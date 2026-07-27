@@ -227,6 +227,22 @@ export default function Metodologia() {
           </div>
         </div>
 
+{/* Qué partidos entran */}
+<div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+  <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest mb-4">
+    Qué partidos entran
+  </h2>
+  <p className="text-zinc-300 mb-3">
+    Todas las estadísticas son de <strong className="text-white">nivel ATP</strong>: cuadro
+    principal de ATP Tour (250, 500, Masters 1000 y ATP Finals), Grand Slams, Davis Cup
+    y Juegos Olímpicos.
+  </p>
+  <p className="text-zinc-400 text-sm">
+    Quedan afuera los Challengers, los ITF Futures y los partidos de clasificación (qualy),
+    igual que en los récords oficiales de la ATP. Por eso un jugador puede aparecer sin
+    temporada en un año en el que sí compitió, si ese año solo jugó Challengers.
+  </p>
+</div>
         {/* Fuente */}
         <div className="bg-zinc-900 border border-yellow-400/40 rounded-2xl p-6">
           <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest mb-3">
