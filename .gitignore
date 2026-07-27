@@ -44,3 +44,6 @@ scripts/distribucion_historica.csv
 # Capturas de pantalla
 Captura de Pantalla*.png
 Screenshot*.png
+
+# Backups de regenerar_todos.py
+*.bak
