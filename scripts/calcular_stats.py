@@ -26,7 +26,12 @@ TORNEOS_INDOOR = {
 def es_indoor(row):
     if row.get("fuente") == "fresco" and pd.notna(row.get("indoor")):
         return str(row["indoor"]).strip().upper() == "I"
-    return any(t in str(row.get("tourney_name","")).lower() for t in TORNEOS_INDOOR)
+    nombre = str(row.get("tourney_name", "")).lower()
+    # Regla general: si el torneo se llama "... Indoor", es indoor.
+    # Cubre casos como "Paris Indoor" que la lista de nombres no agarraba.
+    if "indoor" in nombre:
+        return True
+    return any(t in nombre for t in TORNEOS_INDOOR)
 
 def es_set_completo(w, l):
     alto = max(w, l)
