@@ -243,6 +243,25 @@ export default function Metodologia() {
     temporada en un año en el que sí compitió, si ese año solo jugó Challengers.
   </p>
 </div>
+{/* Cómo se determina indoor */}
+<div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+  <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest mb-4">
+    Cómo se determina indoor
+  </h2>
+  <p className="text-zinc-300 mb-3">
+    Desde 2024 el dato viene marcado en la fuente, así que es exacto. Para los años
+    anteriores no existe ese campo y hay que <strong className="text-white">inferirlo</strong>:
+    tomamos como indoor los torneos cuyo nombre lo indica, una lista curada de sedes
+    bajo techo, y todos los partidos jugados sobre Carpet.
+  </p>
+  <p className="text-zinc-400 text-sm">
+    El Carpet era una superficie portátil que se instalaba dentro de estadios — Wembley,
+    el circuito WCT, Philadelphia — y desapareció del circuito alrededor de 2009. Tomarlo
+    como indoor recupera más de doce mil partidos que antes quedaban sin clasificar, a
+    costa de inferir en lugar de verificar. Es la única estadística de Ace Stats que no
+    sale directamente del dato.
+  </p>
+</div>
         {/* Fuente */}
         <div className="bg-zinc-900 border border-yellow-400/40 rounded-2xl p-6">
           <h2 className="text-sm font-semibold text-yellow-400 uppercase tracking-widest mb-3">
