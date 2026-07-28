@@ -160,7 +160,8 @@ if __name__ == "__main__":
 
     stats = calcular_distribucion(df)
     tabla = armar_tabla(stats)
-    tabla.to_csv("distribucion_historica.csv", index=False)
+    tabla.to_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "distribucion_historica.csv"), index=False)
     print(f"Guardado distribucion_historica.csv con {len(tabla)} jugadores")
 
     print("\n--- Percentiles (con umbrales aplicados) ---")
