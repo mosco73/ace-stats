@@ -29,7 +29,7 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 RUTA_JUGADORES = os.path.join(DIR, "..", "app", "data", "jugadores.ts")
 
 NOMBRES_DATASET = {
-    "Alex de Miñaur": "Alex De Minaur",
+    "Alex de Miñaur": "Alex de Minaur",
 }
 
 

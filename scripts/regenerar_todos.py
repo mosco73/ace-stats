@@ -34,7 +34,7 @@ RUTA_CSV = os.path.join(DIR, "distribucion_historica.csv")
 
 # Nombres del sitio -> nombres del dataset (cuando difieren)
 NOMBRES_DATASET = {
-    "Alex de Miñaur": "Alex De Minaur",
+    "Alex de Miñaur": "Alex de Minaur",
 }
 
 

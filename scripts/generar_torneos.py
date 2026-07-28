@@ -23,7 +23,7 @@ RUTA_SALIDA = os.path.join(DIR, "..", "app", "data", "torneos.ts")
 
 # Nombres del sitio -> nombres del dataset (cuando difieren)
 NOMBRES_DATASET = {
-    "Alex de Miñaur": "Alex De Minaur",
+    "Alex de Miñaur": "Alex de Minaur",
 }
 
 # Torneo canonico -> variantes en el dataset (case-insensitive)

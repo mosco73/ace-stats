@@ -25,7 +25,7 @@ RUTA_SALIDA = os.path.join(DIR, "..", "app", "data", "rivalidades.ts")
 
 # Nombres del sitio -> nombres del dataset (cuando difieren)
 NOMBRES_DATASET = {
-    "Alex de Miñaur": "Alex De Minaur",
+    "Alex de Miñaur": "Alex de Minaur",
 }
 
 
