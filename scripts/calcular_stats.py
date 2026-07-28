@@ -57,22 +57,63 @@ def parsear_sets(score):
         if not es_set_completo(w,l): sets = sets[:-1]
     return sets
 
+ANIOS_HISTORICO = range(1968, 2024)
+ANIOS_FRESCOS = [2024, 2025, 2026]
+
+
 def cargar_todo():
-    print("Cargando historico...")
+    """
+    Carga el dataset completo: historico (Sackmann) + frescos (TML).
+
+    Falla fuerte si falta una fuente entera. Antes usaba os.path.exists() y
+    seguia de largo en silencio: si HISTORICO_DIR no existia, cargaba solo
+    2024-2026, decia "todo bien" y devolvia stats mutiladas. Mismo criterio
+    fail-closed que actualizar.py.
+    """
     dfs = []
-    for y in range(1968,2024):
+
+    print("Cargando historico...")
+    if not os.path.isdir(HISTORICO_DIR):
+        raise FileNotFoundError(
+            f"No existe el directorio del historico: {HISTORICO_DIR}\n"
+            "Sin el, las stats saldrian con solo 2024-2026. Baja el repo "
+            "JeffSackmann/tennis_atp antes de seguir."
+        )
+    faltan_hist = []
+    for y in ANIOS_HISTORICO:
         p = os.path.join(HISTORICO_DIR, f"atp_matches_{y}.csv")
         if os.path.exists(p):
             df = pd.read_csv(p, low_memory=False)
             df["fuente"] = "historico"
             dfs.append(df)
+        else:
+            faltan_hist.append(y)
+    total_hist = len(list(ANIOS_HISTORICO))
+    if len(faltan_hist) == total_hist:
+        raise FileNotFoundError(
+            f"No encontre ningun atp_matches_YYYY.csv en {HISTORICO_DIR}"
+        )
+    print(f"  {total_hist - len(faltan_hist)}/{total_hist} archivos historicos")
+    if faltan_hist:
+        print(f"  !! FALTAN {len(faltan_hist)} anios: {faltan_hist}")
+        print("  !! Las stats de esos anios van a salir incompletas.")
+
     print("Cargando frescos...")
-    for y in [2024,2025,2026]:
+    faltan_frescos = []
+    for y in ANIOS_FRESCOS:
         p = os.path.join(FRESCOS_DIR, f"tml_{y}.csv")
         if os.path.exists(p):
             df = pd.read_csv(p, low_memory=False)
             df["fuente"] = "fresco"
             dfs.append(df)
+        else:
+            faltan_frescos.append(y)
+    if faltan_frescos:
+        raise FileNotFoundError(
+            f"Faltan CSV frescos en {FRESCOS_DIR}: {faltan_frescos}\n"
+            "Corre: python3 scripts/actualizar.py --sin-ingesta"
+        )
+    print(f"  {len(ANIOS_FRESCOS)}/{len(ANIOS_FRESCOS)} archivos frescos")
     df = pd.concat(dfs, ignore_index=True)
     # Los CSV historicos y los frescos escriben distinto las particulas del
     # apellido ("Alex De Minaur" vs "Alex de Minaur"), lo que partia la carrera
