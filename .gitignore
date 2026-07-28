@@ -47,3 +47,6 @@ Screenshot*.png
 
 # Backups de regenerar_todos.py
 *.bak
+
+# Backup de migrar_a_tml.py
+*.pre-tml
