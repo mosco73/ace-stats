@@ -249,18 +249,20 @@ export default function Metodologia() {
     Cómo se determina indoor
   </h2>
   <p className="text-zinc-300 mb-3">
-    Desde 2024 el dato viene marcado en la fuente, así que es exacto. Para los años
-    anteriores no existe ese campo y hay que <strong className="text-white">inferirlo</strong>:
-    tomamos como indoor los torneos cuyo nombre lo indica, una lista curada de sedes
-    bajo techo, y todos los partidos jugados sobre Carpet.
-  </p>
-  <p className="text-zinc-400 text-sm">
-    El Carpet era una superficie portátil que se instalaba dentro de estadios — Wembley,
-    el circuito WCT, Philadelphia — y desapareció del circuito alrededor de 2009. Tomarlo
-    como indoor recupera más de doce mil partidos que antes quedaban sin clasificar, a
-    costa de inferir en lugar de verificar. Es la única estadística de Ace Stats que no
-    sale directamente del dato.
-  </p>
+          El dato viene marcado en la fuente en la gran mayoría de los partidos:
+          TennisMyLife publica un campo <code>indoor</code> para toda su base, no solo
+          para los años recientes. Cuando ese campo está, lo usamos tal cual. Para la
+          minoría que no lo trae hay que <strong className="text-white">inferirlo</strong>:
+          tomamos como indoor los torneos cuyo nombre lo indica, una lista curada de sedes
+          bajo techo, y todos los partidos jugados sobre Carpet.
+        </p>
+        <p className="text-zinc-400 text-sm">
+          El Carpet era una superficie portátil que se instalaba dentro de estadios — Wembley,
+          el circuito WCT, Philadelphia — y desapareció del circuito alrededor de 2009. Tratarlo
+          como indoor cubre buena parte de los partidos viejos sin dato. Esa inferencia es la
+          parte de la clasificación que no se verifica contra la fuente, y por eso queda
+          documentada acá.
+        </p>
 </div>
         {/* Fuente */}
         <div className="bg-zinc-900 border border-yellow-400/40 rounded-2xl p-6">
