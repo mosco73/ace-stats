@@ -281,7 +281,7 @@ export default function Metodologia() {
             >
               el repositorio de Ace Stats
             </a>
-            . Los datos provienen de Jeff Sackmann / Tennis Abstract.
+             {" "}Los datos provienen de TennisMyLife.
           </p>
         </div>
       </section>
