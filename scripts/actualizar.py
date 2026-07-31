@@ -213,7 +213,7 @@ def correr_ingesta():
         import psycopg2
         from calcular_stats import cargar_todo
         from ingesta_stats_temporada import ingestar
-        from ingesta_supabase import pedir_conexion
+        from ingesta_supabase import pedir_conexion, ingestar_partidos
     except ImportError as e:
         print(f"ERROR: no pude importar lo necesario para ingerir: {e}")
         return 1
@@ -232,11 +232,12 @@ def correr_ingesta():
 
         # Lee los MISMOS archivos que se acaban de verificar.
         df = cargar_todo()
+        partidos = ingestar_partidos(df, cur)
         insertadas = ingestar(df, cur)
 
         conn.commit()
         print(f"\n{'='*60}")
-        print(f"INGESTA OK: {insertadas} filas de stats_por_temporada actualizadas.")
+        print(f"INGESTA OK: {partidos} partidos y {insertadas} filas de stats_por_temporada.")
         print(f"{'='*60}\n")
         return 0
     except Exception as e:

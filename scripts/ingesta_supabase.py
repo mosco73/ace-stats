@@ -80,15 +80,7 @@ def texto(v):
     return str(v)
 
 
-if __name__ == "__main__":
-    dsn = pedir_conexion()
-    print("\nConectando a Supabase...")
-    conn = psycopg2.connect(dsn)
-    conn.autocommit = False
-    cur = conn.cursor()
-    print("Conectado ✓\n")
-
-    df = cargar_todo()
+def ingestar_partidos(df, cur):
     total = len(df)
     print(f"\nPreparando {total} partidos (calculando indoor con la lista curada)...")
     df["_indoor"] = df.apply(es_indoor, axis=1)
@@ -113,7 +105,7 @@ if __name__ == "__main__":
         ))
 
     print("Vaciando tablas (re-corrida limpia)...")
-    cur.execute("truncate partidos, jugadores")
+    cur.execute("truncate partidos")
 
     print("Cargando partidos en tandas de 5000...")
     sql = """insert into partidos
@@ -135,22 +127,41 @@ if __name__ == "__main__":
     ) for b in bios]
     execute_values(cur, """insert into jugadores
         (id, nombre, nombre_dataset, pais, mano, pro_desde, ranking, grand_slams, semanas_1)
-        values %s""", filas_j)
+        values %s on conflict do nothing""", filas_j)
 
-    conn.commit()
+    return len(filas)
 
-    print("\n--- VERIFICACIÓN ---")
-    cur.execute("select count(*) from partidos")
-    n_p = cur.fetchone()[0]
-    cur.execute("select count(*) from jugadores")
-    n_j = cur.fetchone()[0]
-    cur.execute("""select count(*) from partidos
-                   where winner_name = 'Novak Djokovic' or loser_name = 'Novak Djokovic'""")
-    n_djoko = cur.fetchone()[0]
-    print(f"Partidos en la base: {n_p} (esperados: {total}) {'✓' if n_p == total else '✗ REVISAR'}")
-    print(f"Jugadores en la base: {n_j} (esperados: {len(bios)}) {'✓' if n_j == len(bios) else '✗ REVISAR'}")
-    print(f"Partidos de Djokovic: {n_djoko} (esperados ~1405)")
+if __name__ == "__main__":
+    dsn = os.environ.get("ACE_STATS_DSN") or pedir_conexion()
+    print("\nConectando a Supabase...")
+    conn = psycopg2.connect(dsn)
+    conn.autocommit = False
+    cur = conn.cursor()
+    print("Conectado ✓\n")
 
-    cur.close()
-    conn.close()
-    print("\nIngesta completa. La base está viva.")
+    try:
+        df = cargar_todo()
+        total = len(df)
+        insertados = ingestar_partidos(df, cur)
+        conn.commit()
+
+        print("\n--- VERIFICACIÓN ---")
+        cur.execute("select count(*) from partidos")
+        n_p = cur.fetchone()[0]
+        cur.execute("select count(*) from jugadores")
+        n_j = cur.fetchone()[0]
+        cur.execute("""select count(*) from partidos
+                       where winner_name = 'Novak Djokovic' or loser_name = 'Novak Djokovic'""")
+        n_djoko = cur.fetchone()[0]
+        print(f"Partidos en la base: {n_p} (esperados: {total}) {'✓' if n_p == total else '✗ REVISAR'}")
+        print(f"Jugadores en la base: {n_j}")
+        print(f"Partidos de Djokovic: {n_djoko}")
+        print("\nIngesta completa. La base está viva.")
+    except Exception as e:
+        conn.rollback()
+        print(f"\nINGESTA FALLIDA: {e}")
+        print("Se hizo rollback: la base quedó como estaba.")
+        raise
+    finally:
+        cur.close()
+        conn.close()
