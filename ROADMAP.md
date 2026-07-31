@@ -196,3 +196,6 @@ Cada vez que surja una idea nueva en el camino, antes de sumarla acá:
 2. ¿Hay algo de una versión anterior sin terminar todavía?
 
 Si la respuesta a (2) es sí, la idea nueva espera su turno.
+
+
+Ranking derivado (en curso). scripts/ranking_derivado.py calcula el ranking del último partido: correcto para 26 de 30, falla en inactivos (Rune, Nishikori) porque el puesto no refleja los puntos descontados desde entonces. Solución de fondo: atp_rankings_current.csv de Sackmann como fuente adicional solo para rankings (partidos siguen en TML). Bloqueado por 404 desde la Mac, sin diagnosticar — el archivo existe y es público. Alternativa: preguntarle a TML si publican rankings como CSV.
