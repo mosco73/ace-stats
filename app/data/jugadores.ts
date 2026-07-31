@@ -7,7 +7,7 @@ export const jugadores = [
     pais: "Serbia",
     mano: "R",
     proDesde: 2004,
-    ranking: 7,
+    ranking: 8,
     grandSlams: 24,
     semanas1: 428,
     stats: {
@@ -247,7 +247,7 @@ export const jugadores = [
     pais: "Rusia",
     mano: "R",
     proDesde: 2014,
-    ranking: 7,
+    ranking: 9,
     grandSlams: 1,
     semanas1: 16,
     stats: {
@@ -343,7 +343,7 @@ export const jugadores = [
     pais: "Alemania",
     mano: "R",
     proDesde: 2013,
-    ranking: 2,
+    ranking: 3,
     grandSlams: 1,
     semanas1: 0,
     stats: {
