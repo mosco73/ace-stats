@@ -179,7 +179,7 @@ def chequeos_blandos(anio, df, hoy, estado_viejo):
 
     # Fuente congelada: mismo ultimo partido y mismas filas que la corrida anterior.
     viejo = (estado_viejo or {}).get(str(anio))
-    if viejo and pd.notna(ultima) and viejo.get("corrida") != hoy.strftime("%Y-%m-%d"):
+    if anio == hoy.year and viejo and pd.notna(ultima) and viejo.get("corrida") != hoy.strftime("%Y-%m-%d"):
         if viejo.get("ultima") == ultima.strftime("%Y-%m-%d") and viejo.get("filas") == len(df):
             avisos.append(
                 f"identico a la corrida anterior ({viejo.get('corrida', 's/f')}): "
